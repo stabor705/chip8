@@ -1,6 +1,15 @@
 #include "chip8.h"
 
-#include <chrono>
+void DelayTimer::store(uint8_t value) {
+    store_tp = clock::now();
+    this->value = value;
+}
+
+uint8_t DelayTimer::read() {
+    auto ticks = chrono::floor<tick_duration>(clock::now() - store_tp).count();
+    if (ticks >= value) return 0;
+    else return value - ticks;
+}
 
 const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
         { 0x07, &Chip8::store_dt }, { 0x0A, &Chip8::wait_for_keypress },
@@ -12,7 +21,7 @@ const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
 constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
 constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
-Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(std::chrono::steady_clock::now().time_since_epoch().count()) {}
+Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()) {}
 
 void Chip8::load_program(std::istream &is) {
     memory.load_program(is, PROGRAM_OFFSET);
@@ -209,7 +218,8 @@ void Chip8::shift_y_left(const uint16_t instr) {
 }
 
 void Chip8::store_dt(const uint16_t instr) {
-    // TODO
+    uint16_t x = get_x_reg_idx(instr);
+    v[x] = dt.read();
 }
 
 void Chip8::wait_for_keypress(const uint16_t instr) {
@@ -217,7 +227,7 @@ void Chip8::wait_for_keypress(const uint16_t instr) {
 }
 
 void Chip8::set_dt(const uint16_t instr) {
-    // TODO
+    dt.store(get_x_reg(instr));
 }
 
 void Chip8::set_st(const uint16_t instr) {
