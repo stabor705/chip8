@@ -6,6 +6,23 @@
 #include <functional>
 #include <random>
 #include <unordered_map>
+#include <exception>
+#include <sstream>
+
+class UndefinedInstruction : public std::exception {
+public:
+    UndefinedInstruction(uint16_t instr) {
+        std::stringstream ss;
+        ss << "Encountered undefined instruction " << std::hex << instr << '.';
+        msg = ss.str();
+    }
+    const char *what() const noexcept override {
+        return msg.c_str();
+    }
+
+private:
+    std::string msg;
+};
 
 class Chip8 {
 public:
@@ -13,9 +30,16 @@ public:
 
     void load_program(std::istream &is);
     void run();
-private:
-    void dispatch(const uint16_t instr);
 
+    void run_instr(const uint16_t instr);
+
+    uint16_t get_vi() const { return vi; }
+    uint8_t get_v(uint16_t idx) const { return v[idx]; }
+    uint16_t get_pc() const { return pc; }
+    void set_vi(uint16_t  idx, uint8_t value) { v[idx] = value; }
+    uint8_t get_vf() const { return v[0xF]; }
+    const Memory& get_mem() const { return memory; }
+private:
     void subroutine_screen(const uint16_t instr);
     void jump(const uint16_t instr);
     void execute_subroutine(const uint16_t instr);
@@ -60,7 +84,7 @@ private:
     typedef void(Chip8::*instr_impl)(const uint16_t);
 
     static constexpr uint16_t PROGRAM_OFFSET = 0x200;
-    static constexpr std::array<instr_impl, 16> implementations = {
+    static constexpr std::array<instr_impl, 16> impls = {
             &Chip8::subroutine_screen, &Chip8::jump, &Chip8::execute_subroutine,
             &Chip8::skip_if_x_eq_arg, &Chip8::skip_if_x_ne_arg, &Chip8::skip_if_x_eq_y,
             &Chip8::store_x, &Chip8::add, &Chip8::arithmetic,
@@ -75,7 +99,7 @@ private:
     };
     static const std::unordered_map<uint8_t, instr_impl> f_ops;
 
-    std::mt19937 rng; // Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
+    std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
     std::array<uint8_t, 16> v; // Sixteen 8 bit registers
     uint16_t vi;  // 16 bit register that stores memory address
     uint16_t pc; // program counter
