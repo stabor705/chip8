@@ -33,14 +33,15 @@ void Chip8::run_instr(const uint16_t instr) {
 
 void Chip8::subroutine_screen(const uint16_t instr) {
     pc += 2;
-    if (instr == 0x0E0) {
+    if (instr == 0x00E0) {
         // TODO
         return;
-    } else if (instr == 0x0EE) {
-        // TODO
+    } else if (instr == 0x00EE) {
+        pc = call_stack.top();
+        call_stack.pop();
         return;
     }
-    // TODO: Rest should be unimplemented
+    // Ignore machine code related instruction
 }
 
 void Chip8::jump(const uint16_t instr) {
@@ -51,7 +52,8 @@ void Chip8::jump(const uint16_t instr) {
 void Chip8::execute_subroutine(const uint16_t instr) {
     pc += 2;
     uint16_t addr = instr & 0x0FFF;
-    // TODO: Execute subroutine
+    call_stack.push(pc);
+    pc = addr;
 }
 
 void Chip8::skip_if_x_eq_arg(const uint16_t instr) {

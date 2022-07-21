@@ -154,3 +154,15 @@ TEST_F(InstructionsTests, TestBCD) {
     ASSERT_EQ(chip.get_mem().get(vi + 1), 5);
     ASSERT_EQ(chip.get_mem().get(vi + 2), 5);
 }
+
+TEST_F(InstructionsTests, TestSubroutines) {
+    chip.run_instr(0x2AAA);
+    ASSERT_EQ(chip.get_pc(), 0xAAA);
+    chip.run_instr(0x2678);
+    ASSERT_EQ(chip.get_pc(), 0x678);
+    chip.run_instr(0x2EEE);
+    chip.run_instr(0x00EE);
+    ASSERT_EQ(chip.get_pc(), 0x678 + 2);
+    chip.run_instr(0x00EE);
+    ASSERT_EQ(chip.get_pc(), 0xAAA + 2);
+}
