@@ -25,6 +25,7 @@ Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_
 
 uint16_t Chip8::run_program_instr() {
     uint16_t instr = memory.fetch_instruction(pc);
+    spdlog::debug("Running instruction {0:x}", instr);
     run_instr(instr);
     return instr;
 }
@@ -37,13 +38,14 @@ void Chip8::run_instr(const uint16_t instr) {
 void Chip8::subroutine_screen(const uint16_t instr) {
     pc += 2;
     if (instr == 0x00E0) {
-        // TODO
+        spdlog::warn("Skipping instruction {0:x}", instr);
         return;
     } else if (instr == 0x00EE) {
         pc = call_stack.top();
         call_stack.pop();
         return;
     }
+    spdlog::warn("Skipping instruction {0:x}", instr);
     // Ignore machine code related instruction
 }
 
@@ -83,6 +85,7 @@ void Chip8::skip_if_x_eq_y(const uint16_t instr) {
 }
 
 void Chip8::store_x(const uint16_t instr) {
+    pc += 2;
     uint16_t x = get_x_reg_idx(instr);
     uint8_t value = instr & 0x0FF;
     v[x] = value;
@@ -134,11 +137,13 @@ void Chip8::random_number(const uint16_t instr) {
 
 void Chip8::draw(const uint16_t instr) {
     pc += 2;
+    spdlog::warn("Skipping instruction {0:x}", instr);
     // TODO:
 }
 
 void Chip8::skip_if_key_pressed(const uint16_t instr) {
     pc += 2;
+    spdlog::warn("Skipping instruction {0:x}", instr);
     // TODO:
 }
 
@@ -217,6 +222,7 @@ void Chip8::store_dt(const uint16_t instr) {
 }
 
 void Chip8::wait_for_keypress(const uint16_t instr) {
+    spdlog::warn("Skipping instruction {0:x}", instr);
     // TODO
 }
 
@@ -225,6 +231,7 @@ void Chip8::set_dt(const uint16_t instr) {
 }
 
 void Chip8::set_st(const uint16_t instr) {
+    spdlog::warn("Skipping instruction {0:x}", instr);
     // TODO
 }
 
@@ -233,6 +240,7 @@ void Chip8::add_x_to_i(const uint16_t instr) {
 }
 
 void Chip8::set_i_to_hexdigit(const uint16_t instr) {
+    spdlog::warn("Skipping instruction {0:x}", instr);
     // TODO
 }
 

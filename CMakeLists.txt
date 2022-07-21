@@ -12,3 +12,6 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 add_executable(unitTests tests/test.cpp src/chip8.h src/chip8.cpp src/mem.cpp src/mem.h)
 target_link_libraries(unitTests gtest gtest_main)
 add_test(unitTests unitTests)
+
+add_subdirectory(extern/spdlog)
+target_link_libraries(chip8 PRIVATE spdlog::spdlog)
