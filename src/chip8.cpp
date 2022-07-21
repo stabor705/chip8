@@ -23,16 +23,10 @@ constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
 Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()) {}
 
-void Chip8::load_program(std::istream &is) {
-    memory.load_program(is, PROGRAM_OFFSET);
-}
-
-void Chip8::run() {
+uint16_t Chip8::run_program_instr() {
     uint16_t instr = memory.fetch_instruction(pc);
-    do {
-        run_instr(instr);
-        instr = memory.fetch_instruction(pc);
-    } while (instr != 0);
+    run_instr(instr);
+    return instr;
 }
 
 void Chip8::run_instr(const uint16_t instr) {
@@ -192,7 +186,7 @@ void Chip8::sub_y_from_x(const uint16_t instr) {
     uint16_t y = get_y_reg_idx(instr);
     if (v[y] > v[x]) v[0xF] = 0;
     else v[0xF] = 1;
-    v[x] = v[x] - v[y]; //TODO: should it be done this way?
+    v[x] = v[x] - v[y];
 }
 
 void Chip8::shift_y_right(const uint16_t instr) {
@@ -282,4 +276,11 @@ uint16_t Chip8::get_x_reg_idx(const uint16_t instr) {
 
 uint16_t Chip8::get_y_reg_idx(const uint16_t instr) {
     return (instr & 0x00F0) >> 4;
+}
+
+void Chip8::load_program(const std::vector<uint8_t> &program) {
+    // TODO: maybe check program length?
+    for (int i = 0; i < program.size(); i++) {
+        memory.set(PROGRAM_OFFSET + i, program[i]);
+    }
 }

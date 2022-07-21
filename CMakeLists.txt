@@ -4,7 +4,7 @@ project(chip8)
 set(CMAKE_CXX_STANDARD 17)
 
 include_directories(src)
-add_executable(chip8 src/main.cpp src/mem.cpp src/mem.h src/chip8.cpp src/chip8.h)
+add_executable(chip8 src/main.cpp src/mem.cpp src/mem.h src/chip8.cpp src/chip8.h src/emulation.cpp src/emulation.h)
 
 add_subdirectory(extern/googletest)
 enable_testing()

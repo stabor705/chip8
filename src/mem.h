@@ -3,13 +3,11 @@
 
 #include <array>
 #include <cstdint>
-#include <ios>
 
 class Memory {
 public:
     Memory() = default;
 
-    void load_program(std::istream &is, uint16_t offset);
     uint16_t fetch_instruction(uint16_t addr) const;
     void set(uint16_t addr, uint8_t value);
     uint8_t get(uint16_t addr) const;

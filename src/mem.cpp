@@ -9,14 +9,6 @@ uint16_t Memory::fetch_instruction(uint16_t addr) const {
     return instr;
 }
 
-void Memory::load_program(std::istream &is, uint16_t offset) {
-    int i = 0;
-    while (!is.eof()) {
-        is >> mem[offset + i];
-    }
-
-}
-
 void Memory::set(uint16_t addr, uint8_t value) {
     mem[addr] = value;
 }

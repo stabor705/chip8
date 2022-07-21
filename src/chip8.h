@@ -9,6 +9,7 @@
 #include <sstream>
 #include <stack>
 #include <chrono>
+#include <vector>
 namespace chrono = std::chrono;
 
 class UndefinedInstruction : public std::exception {
@@ -43,11 +44,10 @@ private:
 class Chip8 {
 public:
     Chip8();
-
-    void load_program(std::istream &is);
-    void run();
+    void load_program(const std::vector<uint8_t> &program);
 
     void run_instr(const uint16_t instr);
+    uint16_t run_program_instr();
 
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
@@ -55,6 +55,7 @@ public:
     void set_vi(uint16_t  idx, uint8_t value) { v[idx] = value; }
     uint8_t get_vf() const { return v[0xF]; }
     const Memory& get_mem() const { return memory; }
+    Memory& get_mem() { return memory; }
 private:
     void subroutine_screen(const uint16_t instr);
     void jump(const uint16_t instr);
