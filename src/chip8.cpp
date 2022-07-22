@@ -21,7 +21,8 @@ const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
 constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
 constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
-Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()) {}
+Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()),
+                 display(new SDLDisplay(16)) {}
 
 uint16_t Chip8::run_program_instr() {
     uint16_t instr = memory.fetch_instruction(pc);
@@ -38,8 +39,7 @@ void Chip8::run_instr(const uint16_t instr) {
 void Chip8::subroutine_screen(const uint16_t instr) {
     pc += 2;
     if (instr == 0x00E0) {
-        spdlog::warn("Skipping instruction {0:x}", instr);
-        return;
+        display->clear_screen();
     } else if (instr == 0x00EE) {
         pc = call_stack.top();
         call_stack.pop();
@@ -137,8 +137,14 @@ void Chip8::random_number(const uint16_t instr) {
 
 void Chip8::draw(const uint16_t instr) {
     pc += 2;
-    spdlog::warn("Skipping instruction {0:x}", instr);
-    // TODO:
+    uint8_t x = get_x_reg(instr);
+    uint8_t y = get_y_reg(instr);
+    uint8_t arg = instr & 0x000F;
+    std::vector<uint8_t> sprite(arg);
+    for (int i = 0; i < arg; i++) {
+        sprite[i] = memory.get(vi + i);
+    }
+    v[0xF] = display->draw_sprite(x, y, sprite);
 }
 
 void Chip8::skip_if_key_pressed(const uint16_t instr) {

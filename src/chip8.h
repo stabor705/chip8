@@ -2,6 +2,7 @@
 #define CHIP8_CHIP8_H
 
 #include "mem.h"
+#include "display.h"
 
 #include "spdlog/spdlog.h"
 
@@ -11,7 +12,7 @@
 #include <sstream>
 #include <stack>
 #include <chrono>
-#include <vector>
+#include <memory>
 namespace chrono = std::chrono;
 
 class UndefinedInstruction : public std::exception {
@@ -126,6 +127,7 @@ private:
 
     Memory memory;
     DelayTimer dt;
+    std::unique_ptr<Display> display;
 };
 
 
