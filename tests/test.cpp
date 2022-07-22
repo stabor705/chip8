@@ -48,6 +48,7 @@ TEST_F(InstructionsTests, TestUndefinedInstructions) {
     EXPECT_THROW(chip.run_instr(0x5009), UndefinedInstruction);
     EXPECT_THROW(chip.run_instr(0x9003), UndefinedInstruction);
     EXPECT_THROW(chip.run_instr(0xF034), std::out_of_range);
+    EXPECT_THROW(chip.run_instr(0xE111), std::out_of_range);
 }
 
 TEST_F(InstructionsTests, TestStoring) {

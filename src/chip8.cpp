@@ -24,7 +24,10 @@ constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()),
                  keyboard({"Q", "W", "E", "R", "T", "A", "S", "D", "F", "G", "Z", "X", "C", "V", "B", "Space"}),
                  display(new SDLDisplay(16))
-{}
+{
+    load_hex_digits(0x0);
+    hex_digits_addr = 0x0;
+}
 
 uint16_t Chip8::run_program_instr() {
     uint16_t instr = memory.fetch_instruction(pc);
@@ -149,10 +152,15 @@ void Chip8::draw(const uint16_t instr) {
     v[0xF] = display->draw_sprite(x, y, sprite);
 }
 
-void Chip8::skip_if_key_pressed(const uint16_t instr) {
+void Chip8::check_key(const uint16_t instr) {
     pc += 2;
-    spdlog::warn("Skipping instruction {0:x}", instr);
-    // TODO:
+    bool key_pressed = keyboard.is_pressed(get_x_reg_idx(instr));
+    uint8_t kind = instr & 0x00FF;
+    if (kind == 0x9E && key_pressed)
+        pc += 2;
+    else if (kind == 0xA1 && !key_pressed)
+        pc += 2;
+    else throw UndefinedInstruction(instr);
 }
 
 void Chip8::time_and_vi(const uint16_t instr) {
@@ -230,8 +238,8 @@ void Chip8::store_dt(const uint16_t instr) {
 }
 
 void Chip8::wait_for_keypress(const uint16_t instr) {
-    spdlog::warn("Skipping instruction {0:x}", instr);
-    // TODO
+    uint16_t x = get_x_reg_idx(instr);
+    v[x] = keyboard.wait_for_key();
 }
 
 void Chip8::set_dt(const uint16_t instr) {
@@ -248,8 +256,7 @@ void Chip8::add_x_to_i(const uint16_t instr) {
 }
 
 void Chip8::set_i_to_hexdigit(const uint16_t instr) {
-    spdlog::warn("Skipping instruction {0:x}", instr);
-    // TODO
+    vi = hex_digits_addr + get_x_reg(instr) * 5;
 }
 
 void Chip8::store_bcd(const uint16_t instr) {
@@ -298,5 +305,14 @@ void Chip8::load_program(const std::vector<uint8_t> &program) {
     // TODO: maybe check program length?
     for (int i = 0; i < program.size(); i++) {
         memory.set(PROGRAM_OFFSET + i, program[i]);
+    }
+}
+
+void Chip8::load_hex_digits(uint16_t addr) {
+    for (const auto &hex_digit : hex_digits) {
+        for (const auto byte : hex_digit) {
+            memory.set(addr, byte);
+            addr++;
+        }
     }
 }

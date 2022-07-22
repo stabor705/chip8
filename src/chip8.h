@@ -75,7 +75,7 @@ private:
     void jump_using_reg(const uint16_t instr);
     void random_number(const uint16_t instr);
     void draw(const uint16_t instr);
-    void skip_if_key_pressed(const uint16_t instr);
+    void check_key(const uint16_t instr);
     void time_and_vi(const uint16_t instr);
 
     void store_y_in_x(const uint16_t instr);
@@ -98,6 +98,8 @@ private:
     void store_registers(const uint16_t instr);
     void fill_registers(const uint16_t instr);
 
+    void load_hex_digits(uint16_t addr);
+
     static uint16_t get_x_reg_idx(const uint16_t instr);
     uint8_t get_x_reg(const uint16_t instr);
     static uint16_t get_y_reg_idx(const uint16_t instr);
@@ -110,7 +112,7 @@ private:
             &Chip8::skip_if_x_eq_arg, &Chip8::skip_if_x_ne_arg, &Chip8::skip_if_x_eq_y,
             &Chip8::store_x, &Chip8::add, &Chip8::arithmetic,
             &Chip8::skip_if_x_ne_y, &Chip8::store_i, &Chip8::jump_using_reg,
-            &Chip8::random_number, &Chip8::draw, &Chip8::skip_if_key_pressed,
+            &Chip8::random_number, &Chip8::draw, &Chip8::check_key,
             &Chip8::time_and_vi
     };
     static constexpr std::array<instr_impl , 8> arithmetic_ops = {
@@ -119,12 +121,31 @@ private:
         &Chip8::shift_y_right, &Chip8::y_minus_x,
     };
     static const std::unordered_map<uint8_t, instr_impl> f_ops;
+    static constexpr std::array<std::array<uint8_t, 5>, 16> hex_digits = {{
+            { 0xF0, 0x90, 0x90, 0x90, 0xF0 }, // 0
+            { 0x20, 0x60, 0x20, 0x20, 0x70 }, // 1
+            { 0xF0, 0x10, 0xF0, 0x80, 0xF0 }, // 2
+            { 0xF0, 0x10, 0xF0, 0x10, 0xF0 }, // 3
+            { 0x90, 0x90, 0xF0, 0x10, 0x10 }, // 4
+            { 0xF0, 0x50, 0xF0, 0x10, 0xF0 }, // 5
+            { 0xF0, 0x80, 0xF0, 0x90, 0xF0 }, // 6
+            { 0xF0, 0x10, 0x20, 0x40, 0x40 }, // 7
+            { 0xF0, 0x90, 0xF0, 0x90, 0xF0 }, // 8
+            { 0xF0, 0x90, 0xF0, 0x10, 0xF0 }, // 9
+            { 0xF0, 0x90, 0xF0, 0x10, 0xF0 }, // A
+            { 0xE0, 0x90, 0xE0, 0x90, 0xE0 }, // B
+            { 0xF0, 0x80, 0x80, 0x80, 0xF0 }, // C
+            { 0xE0, 0x90, 0x90, 0x90, 0xE0 }, // D
+            { 0xF0, 0x80, 0xF0, 0x80, 0xF0 }, // E
+            { 0xF0, 0x80, 0xF0, 0x80, 0x80 }  // F
+    }};
 
     std::array<uint8_t, 16> v; // Sixteen 8 bit registers
     uint16_t vi;  // 16 bit register that stores memory address
     uint16_t pc; // program counter
     std::stack<uint16_t> call_stack; // TODO: max call depth
     std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
+    uint16_t hex_digits_addr;
 
     Memory memory;
     DelayTimer dt;
