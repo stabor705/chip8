@@ -2,7 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-
 bool PixelMatrix::draw_sprite(uint8_t x, uint8_t y, const std::vector<uint8_t> &sprite) {
     bool set_vf = false;
     for (int row = 0; row < sprite.size(); row++) {
@@ -27,10 +26,6 @@ void PixelMatrix::clear() {
 }
 
 SDLDisplay::SDLDisplay(uint8_t scale) : scale(scale) {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        spdlog::error("Failed to initialize SDL Video subsystem");
-        return;
-    }
     SDL_CreateWindowAndRenderer(scale * 64, scale * 32, NULL, &window, &renderer);
 }
 
@@ -65,5 +60,4 @@ void SDLDisplay::clear_screen() {
 SDLDisplay::~SDLDisplay() {
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
-    SDL_Quit();
 }

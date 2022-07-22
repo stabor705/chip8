@@ -3,6 +3,7 @@
 
 #include "mem.h"
 #include "display.h"
+#include "keyboard.h"
 
 #include "spdlog/spdlog.h"
 
@@ -119,15 +120,16 @@ private:
     };
     static const std::unordered_map<uint8_t, instr_impl> f_ops;
 
-    std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
     std::array<uint8_t, 16> v; // Sixteen 8 bit registers
     uint16_t vi;  // 16 bit register that stores memory address
     uint16_t pc; // program counter
     std::stack<uint16_t> call_stack; // TODO: max call depth
+    std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
 
     Memory memory;
     DelayTimer dt;
     std::unique_ptr<Display> display;
+    Keyboard keyboard;
 };
 
 

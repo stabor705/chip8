@@ -22,7 +22,9 @@ constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
 constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
 Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()),
-                 display(new SDLDisplay(16)) {}
+                 keyboard({"Q", "W", "E", "R", "T", "A", "S", "D", "F", "G", "Z", "X", "C", "V", "B", "Space"}),
+                 display(new SDLDisplay(16))
+{}
 
 uint16_t Chip8::run_program_instr() {
     uint16_t instr = memory.fetch_instruction(pc);

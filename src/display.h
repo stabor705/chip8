@@ -1,7 +1,7 @@
 #ifndef CHIP8_DISPLAY_H
 #define CHIP8_DISPLAY_H
 
-#include "SDL2/SDL.h"
+#include "sdlutils.h"
 
 #include <cstdint>
 #include <array>
@@ -41,6 +41,7 @@ public:
 private:
     SDL_Window *window;
     SDL_Renderer *renderer;
+
     uint8_t scale;
 };
 
