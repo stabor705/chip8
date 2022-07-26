@@ -45,6 +45,7 @@ void Chip8::subroutine_screen(const uint16_t instr) {
     pc += 2;
     if (instr == 0x00E0) {
         display->clear_screen();
+        return;
     } else if (instr == 0x00EE) {
         pc = call_stack.top();
         call_stack.pop();
@@ -56,6 +57,10 @@ void Chip8::subroutine_screen(const uint16_t instr) {
 
 void Chip8::jump(const uint16_t instr) {
     uint16_t addr = instr & 0x0FFF;
+    if (pc == addr) {
+        pc += 2;
+        return;
+    }
     pc = addr;
 }
 

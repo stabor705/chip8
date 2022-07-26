@@ -41,7 +41,9 @@ bool SDLDisplay::draw_sprite(uint8_t x, uint8_t y, const std::vector<uint8_t> &s
     for (int row = 0; row < 32; row++) {
         rect.x = 0;
         for (int col = 0; col < 64; col++) {
-            SDL_RenderDrawRect(renderer, &rect);
+            if (!pixel_matrix.get_pixel(col, row)) {
+                SDL_RenderFillRect(renderer, &rect);
+            }
             rect.x += scale;
         }
         rect.y += scale;
