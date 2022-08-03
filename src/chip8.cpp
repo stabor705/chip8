@@ -22,8 +22,7 @@ constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
 constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
 Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count()),
-                 keyboard({"Q", "W", "E", "R", "T", "A", "S", "D", "F", "G", "Z", "X", "C", "V", "B", "Space"}),
-                 display(new SDLDisplay(16))
+                 keyboard({"Q", "W", "E", "R", "T", "A", "S", "D", "F", "G", "Z", "X", "C", "V", "B", "Space"})
 {
     load_hex_digits(0x0);
     hex_digits_addr = 0x0;
@@ -44,7 +43,7 @@ void Chip8::run_instr(const uint16_t instr) {
 void Chip8::subroutine_screen(const uint16_t instr) {
     pc += 2;
     if (instr == 0x00E0) {
-        display->clear_screen();
+        display.clear();
         return;
     } else if (instr == 0x00EE) {
         pc = call_stack.top();
@@ -154,7 +153,7 @@ void Chip8::draw(const uint16_t instr) {
     for (int i = 0; i < arg; i++) {
         sprite[i] = memory.get(vi + i);
     }
-    v[0xF] = display->draw_sprite(x, y, sprite);
+    v[0xF] = display.draw_sprite(x, y, sprite);
 }
 
 void Chip8::check_key(const uint16_t instr) {

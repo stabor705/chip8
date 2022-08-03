@@ -149,7 +149,7 @@ private:
 
     Memory memory;
     DelayTimer dt;
-    std::unique_ptr<Display> display;
+    Display display;
     Keyboard keyboard;
 };
 
