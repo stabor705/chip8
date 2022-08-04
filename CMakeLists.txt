@@ -7,7 +7,7 @@ file(GLOB chip8_SOURCE_FILES src/*.cpp)
 file(GLOB chip8_HEADER_FILES src/*.h)
 
 include_directories(src)
-add_executable(chip8 ${chip8_SOURCE_FILES})
+add_executable(chip8 ${chip8_SOURCE_FILES} src/disassembler.cpp src/disassembler.h)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
