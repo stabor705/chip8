@@ -61,57 +61,57 @@ public:
     const Memory& get_mem() const { return memory; }
     Memory& get_mem() { return memory; }
 private:
-    void subroutine_screen(const uint16_t instr);
-    void jump(const uint16_t instr);
-    void execute_subroutine(const uint16_t instr);
-    void skip_if_x_eq_arg(const uint16_t instr);
-    void skip_if_x_ne_arg(const uint16_t instr);
-    void skip_if_x_eq_y(const uint16_t instr);
-    void store_x(const uint16_t instr);
-    void add(const uint16_t instr);
-    void arithmetic(const uint16_t instr);
-    void skip_if_x_ne_y(const uint16_t instr);
-    void store_i(const uint16_t instr);
-    void jump_using_reg(const uint16_t instr);
-    void random_number(const uint16_t instr);
-    void draw(const uint16_t instr);
-    void check_key(const uint16_t instr);
-    void time_and_vi(const uint16_t instr);
+    void subroutine_screen(uint16_t instr);
+    void jump(uint16_t instr);
+    void execute_subroutine(uint16_t instr);
+    void skip_if_x_eq_arg(uint16_t instr);
+    void skip_if_x_ne_arg(uint16_t instr);
+    void skip_if_x_eq_y(uint16_t instr);
+    void store_x(uint16_t instr);
+    void add(uint16_t instr);
+    void arithmetic(uint16_t instr);
+    void skip_if_x_ne_y(uint16_t instr);
+    void store_i(uint16_t instr);
+    void jump_using_v0(uint16_t instr);
+    void random_number(uint16_t instr);
+    void draw(uint16_t instr);
+    void check_key(uint16_t instr);
+    void time_and_vi(uint16_t instr);
 
-    void store_y_in_x(const uint16_t instr);
-    void x_or_y(const uint16_t instr);
-    void x_and_y(const uint16_t instr);
-    void x_xor_y(const uint16_t instr);
-    void add_y_to_x(const uint16_t instr);
-    void sub_y_from_x(const uint16_t instr);
-    void shift_y_right(const uint16_t instr);
-    void y_minus_x(const uint16_t instr);
-    void shift_y_left(const uint16_t instr);
+    void store_y_in_x(uint16_t instr);
+    void x_or_y(uint16_t instr);
+    void x_and_y(uint16_t instr);
+    void x_xor_y(uint16_t instr);
+    void add_y_to_x(uint16_t instr);
+    void sub_y_from_x(uint16_t instr);
+    void shift_y_right(uint16_t instr);
+    void y_minus_x(uint16_t instr);
+    void shift_y_left(uint16_t instr);
 
-    void store_dt(const uint16_t instr);
-    void wait_for_keypress(const uint16_t instr);
-    void set_dt(const uint16_t instr);
-    void set_st(const uint16_t instr);
-    void add_x_to_i(const uint16_t instr);
-    void set_i_to_hexdigit(const uint16_t instr);
-    void store_bcd(const uint16_t instr);
-    void store_registers(const uint16_t instr);
-    void fill_registers(const uint16_t instr);
+    void store_dt(uint16_t instr);
+    void wait_for_keypress(uint16_t instr);
+    void set_dt(uint16_t instr);
+    void set_st(uint16_t instr);
+    void add_x_to_i(uint16_t instr);
+    void set_i_to_hexdigit(uint16_t instr);
+    void store_bcd(uint16_t instr);
+    void store_registers(uint16_t instr);
+    void fill_registers(uint16_t instr);
 
     void load_hex_digits(uint16_t addr);
 
-    static uint16_t get_x_reg_idx(const uint16_t instr);
-    uint8_t get_x_reg(const uint16_t instr);
-    static uint16_t get_y_reg_idx(const uint16_t instr);
-    uint8_t get_y_reg(const uint16_t instr);
-    typedef void(Chip8::*instr_impl)(const uint16_t);
+    static uint16_t get_x_reg_idx(uint16_t instr);
+    uint8_t get_x_reg(uint16_t instr);
+    static uint16_t get_y_reg_idx(uint16_t instr);
+    uint8_t get_y_reg(uint16_t instr);
+    typedef void(Chip8::*instr_impl)(uint16_t);
 
     static constexpr uint16_t PROGRAM_OFFSET = 0x200;
     static constexpr std::array<instr_impl, 16> impls = {
             &Chip8::subroutine_screen, &Chip8::jump, &Chip8::execute_subroutine,
             &Chip8::skip_if_x_eq_arg, &Chip8::skip_if_x_ne_arg, &Chip8::skip_if_x_eq_y,
             &Chip8::store_x, &Chip8::add, &Chip8::arithmetic,
-            &Chip8::skip_if_x_ne_y, &Chip8::store_i, &Chip8::jump_using_reg,
+            &Chip8::skip_if_x_ne_y, &Chip8::store_i, &Chip8::jump_using_v0,
             &Chip8::random_number, &Chip8::draw, &Chip8::check_key,
             &Chip8::time_and_vi
     };
