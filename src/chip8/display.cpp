@@ -1,7 +1,5 @@
 #include "display.h"
 
-#include <spdlog/spdlog.h>
-
 bool Display::draw_sprite(uint8_t x, uint8_t y, const std::vector<uint8_t> &sprite) {
     bool set_vf = false;
     for (int row = 0; row < sprite.size(); row++) {

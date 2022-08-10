@@ -4,8 +4,6 @@
 #include "chip8/mem.h"
 #include "chip8/display.h"
 
-#include "spdlog/spdlog.h"
-
 #include <random>
 #include <unordered_map>
 #include <exception>

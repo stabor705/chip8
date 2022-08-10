@@ -29,7 +29,6 @@ Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_
 
 uint16_t Chip8::run_program_instr() {
     uint16_t instr = memory.fetch_instruction(pc);
-    spdlog::debug("Running instruction {0:x}", instr);
     run_instr(instr);
     return instr;
 }
@@ -49,7 +48,6 @@ void Chip8::subroutine_screen(uint16_t instr) {
         call_stack.pop();
         return;
     }
-    spdlog::warn("Skipping instruction {0:x}", instr);
     // Ignore machine code related instruction
 }
 
@@ -248,7 +246,6 @@ void Chip8::set_dt(uint16_t instr) {
 }
 
 void Chip8::set_st(uint16_t instr) {
-    spdlog::warn("Skipping instruction {0:x}", instr);
     // TODO
 }
 

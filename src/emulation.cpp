@@ -20,5 +20,4 @@ void Emulation::load_program(std::istream &is) {
     }
     chip.load_program(program);
     ui.run_disassembler(program);
-    spdlog::info("Successfully loaded program {} bytes long.", program.size());
 }
