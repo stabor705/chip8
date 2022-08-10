@@ -1,7 +1,8 @@
 #ifndef CHIP8_EMULATION_H
 #define CHIP8_EMULATION_H
 
-#include "chip8.h"
+#include "chip8/chip8.h"
+#include "ui/userinterface.h"
 
 #include <ios>
 
@@ -12,6 +13,7 @@ public:
     void load_program(std::istream &is);
 private:
     Chip8 chip;
+    UserInterface ui;
 };
 
 

@@ -3,8 +3,12 @@
 #include <iterator>
 
 void Emulation::run() {
-    // TODO: For now program.size() == 2^16 - 0x200 => emulator is ded ;- (
-    while (chip.run_program_instr()) {}
+    while (!ui.user_quit()) {
+        ui.update_chip_state(chip);
+
+        ui.render_frame();
+        ui.process_input();
+    }
 }
 
 void Emulation::load_program(std::istream &is) {
@@ -15,5 +19,6 @@ void Emulation::load_program(std::istream &is) {
         program.push_back(byte);
     }
     chip.load_program(program);
+    ui.run_disassembler(program);
     spdlog::info("Successfully loaded program {} bytes long.", program.size());
 }
