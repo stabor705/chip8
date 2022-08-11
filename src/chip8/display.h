@@ -13,7 +13,7 @@ public:
     const Pixels &get_pixels() const { return pixels; }
     void clear();
 private:
-    Pixels pixels;
+    Pixels pixels {};
 };
 
 #endif //CHIP8_DISPLAY_H
