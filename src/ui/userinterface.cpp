@@ -46,7 +46,11 @@ void UserInterface::update_chip_state(const Chip8 &chip) {
 }
 
 void UserInterface::add_message(const std::string &msg) {
-//    messaging_window.add_message(msg);
+        messaging_window.add_message(msg);
+}
+
+void UserInterface::halt_controls() {
+    controls_window.halt();
 }
 
 bool UserInterface::should_run_instr() const {

@@ -7,6 +7,7 @@ public:
     ControlsWindow() : halted(true) {}
 
     void show();
+    void halt() { halted = true; }
 
     bool is_halted() const { return halted; }
     bool should_run_next_frame() const { return next_frame; }

@@ -12,7 +12,7 @@ public:
     void set(uint16_t addr, uint8_t value);
     uint8_t get(uint16_t addr) const;
 private:
-    static constexpr std::size_t MEM_SIZE = 0xFFFF;
+    static constexpr std::size_t MEM_SIZE = 0xFFF;
 
     std::array<uint8_t , MEM_SIZE> mem;
 };

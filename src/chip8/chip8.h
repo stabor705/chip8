@@ -48,7 +48,7 @@ public:
     void load_program(const std::vector<uint8_t> &program);
 
     void run_instr(const uint16_t instr);
-    uint16_t run_program_instr();
+    bool run_program_instr();
 
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
@@ -143,6 +143,7 @@ private:
     std::stack<uint16_t> call_stack; // TODO: max call depth
     std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
     uint16_t hex_digits_addr;
+    uint16_t program_size;
 
     Memory memory;
     DelayTimer dt;

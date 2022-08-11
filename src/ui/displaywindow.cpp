@@ -28,7 +28,7 @@ void OpenGLPixelDisplay::fill_pixel(unsigned int y, unsigned int x) {
     glViewport(0, 0, res_x, res_y);
     glUseProgram(shader_program);
     glBindVertexArray(VAO);
-    int offset = sizeof(unsigned int) * (y * DISPLAY_WIDTH + x) * 6;
+    int offset = sizeof(unsigned int) * (( DISPLAY_HEIGHT - y) * (DISPLAY_WIDTH + 1) + x) * 6;
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)offset);
     glBindVertexArray(0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

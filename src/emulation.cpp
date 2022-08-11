@@ -1,17 +1,21 @@
 #include "emulation.h"
 
 #include <iostream>
+#include <thread>
 
 void Emulation::run() {
     while (!ui.user_quit()) {
         ui.update_chip_state(chip);
+
         ui.update_display(chip.get_screen());
 
         ui.render_frame();
         ui.process_input();
         if (ui.should_run_instr()) {
             try {
-                chip.run_program_instr();
+                if (!chip.run_program_instr()) {
+                    ui.halt_controls();
+                }
             }
             catch (std::exception &e) {
                 ui.add_message(e.what());

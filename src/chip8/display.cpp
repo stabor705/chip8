@@ -5,7 +5,7 @@ bool Display::draw_sprite(uint8_t x, uint8_t y, const std::vector<uint8_t> &spri
     for (int row = 0; row < sprite.size(); row++) {
         for (int col = 0; col < 8; col++) {
             bool pixel = pixels[row + y][col + x];
-            bool sprite_pixel = sprite[row] & (1 << col);
+            bool sprite_pixel = sprite[row] & (128 >> col);
             if (pixel && sprite_pixel)
                 collided = true;
             pixels[row + y][col + x] = pixel ^ sprite_pixel;

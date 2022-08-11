@@ -27,10 +27,12 @@ Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_
     hex_digits_addr = 0x0;
 }
 
-uint16_t Chip8::run_program_instr() {
+bool Chip8::run_program_instr() {
+    if (pc >= PROGRAM_OFFSET + program_size)
+        return false;
     uint16_t instr = memory.fetch_instruction(pc);
     run_instr(instr);
-    return instr;
+    return true;
 }
 
 void Chip8::run_instr(uint16_t instr) {
@@ -301,6 +303,7 @@ uint16_t Chip8::get_y_reg_idx(uint16_t instr) {
 
 void Chip8::load_program(const std::vector<uint8_t> &program) {
     // TODO: maybe check program length?
+    program_size = program.size();
     for (int i = 0; i < program.size(); i++) {
         memory.set(PROGRAM_OFFSET + i, program[i]);
     }

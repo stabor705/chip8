@@ -43,6 +43,7 @@ public:
     void update_display(const std::array<std::array<bool, DISPLAY_WIDTH>, DISPLAY_HEIGHT> &pixels);
     void update_chip_state(const Chip8 &chip);
     void add_message(const std::string &msg);
+    void halt_controls();
 
     bool should_run_instr() const;
 
