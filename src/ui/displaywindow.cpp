@@ -1,7 +1,5 @@
 #include "displaywindow.h"
 
-#include <iostream>
-
 #include <glad/glad.h>
 #include <imgui.h>
 
@@ -46,8 +44,6 @@ void OpenGLPixelDisplay::initialize_vertices() {
             int idx = y * v_w + x;
             vertices[idx][0] = -1.0f + (2.0f / DISPLAY_WIDTH) * x;
             vertices[idx][1] = 1.0f - (2.0f / DISPLAY_HEIGHT) * y;
-            std::cout << idx << ": " << vertices[idx][0] << " " << vertices[idx][1]
-                      << std::endl;
         }
     }
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -68,10 +64,6 @@ void OpenGLPixelDisplay::initialize_indices() {
             indices[idx][3] = idx + DISPLAY_WIDTH + 1; // lower left corner
             indices[idx][4]	= idx + DISPLAY_WIDTH + 2; // lower right corner
             indices[idx][5] = idx + 1; // upper right corner
-            for (int i = 0; i < 6; i++) {
-                std::cout << indices[idx][i] << ", ";
-            }
-            std::cout << std::endl;
         }
     }
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);

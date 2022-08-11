@@ -18,6 +18,8 @@ void UserInterface::render_frame() {
     disassembly_window.show();
     display_window.show();
     chip_state_window.show();
+    controls_window.show();
+    messaging_window.show();
 
     ImGui::Render();
     glClearColor(0, 0, 0, 1);
@@ -40,6 +42,15 @@ void UserInterface::update_display(const std::array<std::array<bool, DISPLAY_WID
 
 void UserInterface::update_chip_state(const Chip8 &chip) {
     chip_state_window.update(chip);
+    disassembly_window.update_pc(chip.get_pc());
+}
+
+void UserInterface::add_message(const std::string &msg) {
+//    messaging_window.add_message(msg);
+}
+
+bool UserInterface::should_run_instr() const {
+    return !controls_window.is_halted() || controls_window.should_run_next_frame();
 }
 
 UserInterface::~UserInterface() {

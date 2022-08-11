@@ -4,6 +4,8 @@
 #include "ui/disassemblywindow.h"
 #include "ui/displaywindow.h"
 #include "ui/chipstatewindow.h"
+#include "ui/controlswindow.h"
+#include "ui/messagingwindow.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -40,6 +42,10 @@ public:
     void run_disassembler(const std::vector<uint8_t> &program);
     void update_display(const std::array<std::array<bool, DISPLAY_WIDTH>, DISPLAY_HEIGHT> &pixels);
     void update_chip_state(const Chip8 &chip);
+    void add_message(const std::string &msg);
+
+    bool should_run_instr() const;
+
 
     ~UserInterface();
 private:
@@ -55,6 +61,9 @@ private:
     DisassemblyWindow disassembly_window;
     DisplayWindow display_window;
     ChipStateWindow chip_state_window;
+    ControlsWindow controls_window;
+    MessagingWindow messaging_window;
+
 
     GLFWwindow *window;
 };
