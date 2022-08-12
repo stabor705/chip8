@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "chip8.h"
+#include "chip8/chip8.h"
 
 class InstructionsTests : public ::testing::Test {
 protected:
@@ -22,25 +22,25 @@ TEST_F(InstructionsTests, TestJump) {
 TEST_F(InstructionsTests, TestSkippingXEqArg) {
     uint16_t starting_pc = chip.get_pc();
     chip.run_instr(0x3414);
-    ASSERT_EQ(chip.get_pc(), starting_pc + 4);
+    ASSERT_EQ(chip.get_pc(), starting_pc + 2);
     chip.run_instr(0x3413);
-    ASSERT_EQ(chip.get_pc(), starting_pc + 6);
+    ASSERT_EQ(chip.get_pc(), starting_pc + 2);
 }
 
 TEST_F(InstructionsTests, TestSkippingXNeArg) {
     uint16_t starting_pc = chip.get_pc();
     chip.run_instr(0x4414);
-    ASSERT_EQ(chip.get_pc(), starting_pc + 2);
+    ASSERT_EQ(chip.get_pc(), starting_pc);
     chip.run_instr(0x4413);
-    ASSERT_EQ(chip.get_pc(), starting_pc + 6);
+    ASSERT_EQ(chip.get_pc(), starting_pc + 2);
 }
 
 TEST_F(InstructionsTests, TestSkippingXEqY) {
     uint16_t starting_pc = chip.get_pc();
     chip.run_instr(0x5460);
-    ASSERT_EQ(chip.get_pc(), starting_pc + 4);
+    ASSERT_EQ(chip.get_pc(), starting_pc + 2);
     chip.run_instr(0x5430);
-    ASSERT_EQ(chip.get_pc(), starting_pc + 6);
+    ASSERT_EQ(chip.get_pc(), starting_pc + 2);
 }
 
 TEST_F(InstructionsTests, TestUndefinedInstructions) {
@@ -48,7 +48,7 @@ TEST_F(InstructionsTests, TestUndefinedInstructions) {
     EXPECT_THROW(chip.run_instr(0x5009), UndefinedInstruction);
     EXPECT_THROW(chip.run_instr(0x9003), UndefinedInstruction);
     EXPECT_THROW(chip.run_instr(0xF034), std::out_of_range);
-    EXPECT_THROW(chip.run_instr(0xE111), std::out_of_range);
+    EXPECT_THROW(chip.run_instr(0xE111), UndefinedInstruction);
 }
 
 TEST_F(InstructionsTests, TestStoring) {
@@ -125,9 +125,9 @@ TEST_F(InstructionsTests, TestLeftShift) {
 TEST_F(InstructionsTests, TestSkippingXNEY) {
     uint16_t pc = chip.get_pc();
     chip.run_instr(0x9640);
-    ASSERT_EQ(chip.get_pc(), pc + 2);
+    ASSERT_EQ(chip.get_pc(), pc);
     chip.run_instr(0x96A0);
-    ASSERT_EQ(chip.get_pc(), pc + 6);
+    ASSERT_EQ(chip.get_pc(), pc + 2);
 }
 
 TEST_F(InstructionsTests, TestStoringMemAddr) {
@@ -163,7 +163,7 @@ TEST_F(InstructionsTests, TestSubroutines) {
     ASSERT_EQ(chip.get_pc(), 0x678);
     chip.run_instr(0x2EEE);
     chip.run_instr(0x00EE);
-    ASSERT_EQ(chip.get_pc(), 0x678 + 2);
+    ASSERT_EQ(chip.get_pc(), 0x678);
     chip.run_instr(0x00EE);
-    ASSERT_EQ(chip.get_pc(), 0xAAA + 2);
+    ASSERT_EQ(chip.get_pc(), 0xAAA);
 }
