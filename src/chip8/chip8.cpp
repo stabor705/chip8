@@ -29,10 +29,19 @@ Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_
     hex_digits_addr = 0x0;
 }
 
+void Chip8::load_program(const std::vector<uint8_t> &program) {
+    // TODO: maybe check program length?
+    program_size = program.size();
+    for (int i = 0; i < program.size(); i++) {
+        memory.set(PROGRAM_OFFSET + i, program[i]);
+    }
+}
+
 bool Chip8::run_program_instr() {
     if (pc >= PROGRAM_OFFSET + program_size)
         return false;
     uint16_t instr = memory.fetch_instruction(pc);
+    pc += 2;
     run_instr(instr);
     return true;
 }
@@ -48,7 +57,6 @@ void Chip8::run_instr(uint16_t instr) {
 }
 
 void Chip8::subroutine_screen(uint16_t instr) {
-    pc += 2;
     if (instr == 0x00E0) {
         display.clear();
         return;
@@ -68,21 +76,18 @@ void Chip8::jump(uint16_t instr) {
 }
 
 void Chip8::execute_subroutine(uint16_t instr) {
-    pc += 2;
     uint16_t addr = instr & 0x0FFF;
     call_stack.push(pc);
     pc = addr;
 }
 
 void Chip8::skip_if_x_eq_arg(uint16_t instr) {
-    pc += 2;
     uint8_t x = get_x_reg(instr);
     uint8_t arg = instr & 0x00FF;
     if (x == arg) pc += 2;
 }
 
 void Chip8::skip_if_x_ne_arg(uint16_t instr) {
-    pc += 2;
     uint8_t x = get_x_reg(instr);
     uint8_t arg = instr & 0x00FF;
     if (x != arg) pc += 2;
@@ -91,21 +96,18 @@ void Chip8::skip_if_x_ne_arg(uint16_t instr) {
 void Chip8::skip_if_x_eq_y(uint16_t instr) {
     if ((instr & 0x000F) != 0)
         throw UndefinedInstruction(instr);
-    pc += 2;
     uint8_t x = get_x_reg(instr);
     uint8_t y = get_y_reg(instr);
     if (x == y) pc += 2;
 }
 
 void Chip8::store_x(uint16_t instr) {
-    pc += 2;
     uint16_t x = get_x_reg_idx(instr);
     uint8_t value = instr & 0x0FF;
     v[x] = value;
 }
 
 void Chip8::add(uint16_t instr) {
-    pc += 2;
     uint16_t x = get_x_reg_idx(instr);
     uint8_t arg = instr & 0x00FF;
     v[x] += arg;
@@ -114,14 +116,12 @@ void Chip8::add(uint16_t instr) {
 void Chip8::skip_if_x_ne_y(uint16_t instr) {
     if ((instr & 0x000F) != 0)
         throw UndefinedInstruction(instr);
-    pc += 2;
     uint8_t x = get_x_reg(instr);
     uint8_t y = get_y_reg(instr);
     if (x != y) pc += 2;
 }
 
 void Chip8::store_i(uint16_t instr) {
-    pc += 2;
     uint16_t arg = instr & 0x0FFF;
     vi = arg;
 }
@@ -132,7 +132,6 @@ void Chip8::jump_using_v0(uint16_t instr) {
 }
 
 void Chip8::arithmetic(uint16_t instr) {
-    pc += 2;
     uint16_t kind = instr & 0x000F;
     if (kind <= 7) {
         (this->*arithmetic_ops[kind])(instr);
@@ -141,7 +140,6 @@ void Chip8::arithmetic(uint16_t instr) {
 }
 
 void Chip8::random_number(uint16_t instr) {
-    pc += 2;
     uint8_t byte_mask = instr & 0x00FF;
     uint16_t x = get_x_reg_idx(instr);
     uint8_t value = rng() % (0xFF + 1);
@@ -149,7 +147,6 @@ void Chip8::random_number(uint16_t instr) {
 }
 
 void Chip8::draw(uint16_t instr) {
-    pc += 2;
     uint8_t x = get_x_reg(instr);
     uint8_t y = get_y_reg(instr);
     uint8_t arg = instr & 0x000F;
@@ -163,7 +160,6 @@ void Chip8::draw(uint16_t instr) {
 }
 
 void Chip8::check_key(uint16_t instr) {
-    pc += 2;
     uint8_t kind = instr & 0x00FF;
     if (kind == 0x9E) {
         if (key_pressed)
@@ -179,7 +175,6 @@ void Chip8::check_key(uint16_t instr) {
 }
 
 void Chip8::time_and_vi(uint16_t instr) {
-    pc += 2;
     uint8_t kind = instr & 0x00FF;
     (this->*f_ops.at(kind))(instr);
 }
@@ -316,14 +311,6 @@ uint16_t Chip8::get_y_reg_idx(uint16_t instr) {
     return (instr & 0x00F0) >> 4;
 }
 
-void Chip8::load_program(const std::vector<uint8_t> &program) {
-    // TODO: maybe check program length?
-    program_size = program.size();
-    for (int i = 0; i < program.size(); i++) {
-        memory.set(PROGRAM_OFFSET + i, program[i]);
-    }
-}
-
 void Chip8::load_hex_digits(uint16_t addr) {
     for (const auto &hex_digit : hex_digits) {
         for (const auto byte : hex_digit) {
@@ -332,5 +319,3 @@ void Chip8::load_hex_digits(uint16_t addr) {
         }
     }
 }
-
-
