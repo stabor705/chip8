@@ -11,6 +11,7 @@ public:
     uint16_t fetch_instruction(uint16_t addr) const;
     void set(uint16_t addr, uint8_t value);
     uint8_t get(uint16_t addr) const;
+    void clear();
 private:
     static constexpr std::size_t MEM_SIZE = 0xFFF;
 

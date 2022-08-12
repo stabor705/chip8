@@ -25,20 +25,23 @@ constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
 Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_epoch().count())
 {
-    load_hex_digits(0x0);
-    hex_digits_addr = 0x0;
+    load_hex_digits();
 }
 
 void Chip8::load_program(const std::vector<uint8_t> &program) {
     // TODO: maybe check program length?
-    program_size = program.size();
+    this->program = program;
+    load_program();
+}
+
+void Chip8::load_program() {
     for (int i = 0; i < program.size(); i++) {
         memory.set(PROGRAM_OFFSET + i, program[i]);
     }
 }
 
 bool Chip8::run_program_instr() {
-    if (pc >= PROGRAM_OFFSET + program_size)
+    if (pc >= PROGRAM_OFFSET + program.size())
         return false;
     uint16_t instr = memory.fetch_instruction(pc);
     pc += 2;
@@ -49,6 +52,22 @@ bool Chip8::run_program_instr() {
 void Chip8::press_key(uint8_t key) {
     key_pressed = true;
     this->key = key;
+}
+
+void Chip8::reset() {
+    for (int i = 0; i < 16; i++) {
+        v[i] = 0;
+    }
+    vi = 0;
+    pc = PROGRAM_OFFSET;
+    while(!call_stack.empty())
+        call_stack.pop();
+    key_pressed = false;
+    dt.store(0);
+    display.clear();
+    memory.clear();
+    load_hex_digits();
+    load_program();
 }
 
 void Chip8::run_instr(uint16_t instr) {
@@ -266,7 +285,7 @@ void Chip8::add_x_to_i(uint16_t instr) {
 }
 
 void Chip8::set_i_to_hexdigit(uint16_t instr) {
-    vi = hex_digits_addr + get_x_reg(instr) * 5;
+    vi = HEXDIGITS_OFFSET + get_x_reg(instr) * 5;
 }
 
 void Chip8::store_bcd(uint16_t instr) {
@@ -311,7 +330,8 @@ uint16_t Chip8::get_y_reg_idx(uint16_t instr) {
     return (instr & 0x00F0) >> 4;
 }
 
-void Chip8::load_hex_digits(uint16_t addr) {
+void Chip8::load_hex_digits() {
+    auto addr = HEXDIGITS_OFFSET;
     for (const auto &hex_digit : hex_digits) {
         for (const auto byte : hex_digit) {
             memory.set(addr, byte);

@@ -41,7 +41,7 @@ void UserInterface::run_disassembler(const std::vector<uint8_t> &program) {
     disassembly_window.load_program(program);
 }
 
-void UserInterface::update_display(const std::array<std::array<bool, DISPLAY_WIDTH>, DISPLAY_HEIGHT> &pixels) {
+void UserInterface::update_display(const Pixels &pixels) {
     display_window.update(pixels);
 }
 
@@ -64,9 +64,6 @@ bool UserInterface::should_run_instr() const {
 
 void UserInterface::handle_input(GLFWwindow *window, int key, int scancode, int action, int mods) {
     UserInterface *ui = (UserInterface *)glfwGetWindowUserPointer(window);
-    std::stringstream ss;
-    ss << "Callback has been called with key " << key;
-    ui->add_message(ss.str());
     if (action == GLFW_PRESS)
         ui->key_pressed = key;
     else if (action == GLFW_RELEASE && key == ui->key_pressed)

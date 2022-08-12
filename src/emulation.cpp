@@ -17,6 +17,8 @@ void Emulation::run() {
         ui.render_frame();
         ui.process_input();
         handle_key(ui.get_key_pressed());
+        if (ui.should_reset_chip())
+            chip.reset();
         if (ui.should_run_instr()) {
             try {
                 if (!chip.run_program_instr()) {
@@ -43,7 +45,7 @@ void Emulation::load_program(std::istream &is) {
 
 void Emulation::handle_key(int key) {
     if (key == 0) {
-        chip.reset_key();
+        chip.release_key();
         return;
     }
     auto it = key_bindings.find(key);

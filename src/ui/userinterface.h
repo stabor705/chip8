@@ -40,13 +40,16 @@ public:
     void process_input();
 
     void run_disassembler(const std::vector<uint8_t> &program);
-    void update_display(const std::array<std::array<bool, DISPLAY_WIDTH>, DISPLAY_HEIGHT> &pixels);
+
+    void update_display(const Pixels &pixels);
     void update_chip_state(const Chip8 &chip);
     void add_message(const std::string &msg);
     void chip_halted();
 
     bool should_run_instr() const;
     int get_key_pressed() const { return key_pressed; }
+    bool should_reset_chip() { return controls_window.should_reset(); }
+
 
     ~UserInterface();
 private:

@@ -8,7 +8,6 @@
 
 class Emulation {
 public:
-    Emulation() = default;
     void run();
     void load_program(std::istream &is);
 private:

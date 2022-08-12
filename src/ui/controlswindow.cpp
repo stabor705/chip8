@@ -9,5 +9,6 @@ void ControlsWindow::show() {
     else
         halted = ImGui::Button("Halt");
     next_frame = ImGui::Button("Next frame");
+    reset = ImGui::Button("Reset");
     ImGui::End();
 }

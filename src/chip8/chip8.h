@@ -11,6 +11,8 @@
 #include <sstream>
 #include <stack>
 
+typedef std::vector<uint8_t> Program;
+
 class UndefinedInstruction : public std::exception {
 public:
     UndefinedInstruction(uint16_t instr);
@@ -35,12 +37,13 @@ private:
 class Chip8 {
 public:
     Chip8();
-    void load_program(const std::vector<uint8_t> &program);
+    void load_program(const Program &program);
 
     void run_instr(const uint16_t instr);
     bool run_program_instr();
     void press_key(uint8_t key);
-    void reset_key() { key_pressed = false; }
+    void release_key() { key_pressed = false; }
+    void reset();
 
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
@@ -88,7 +91,8 @@ private:
     void store_registers(uint16_t instr);
     void fill_registers(uint16_t instr);
 
-    void load_hex_digits(uint16_t addr);
+    void load_hex_digits();
+    void load_program();
 
     static uint16_t get_x_reg_idx(uint16_t instr);
     uint8_t get_x_reg(uint16_t instr);
@@ -97,6 +101,7 @@ private:
     typedef void(Chip8::*instr_impl)(uint16_t);
 
     static constexpr uint16_t PROGRAM_OFFSET = 0x200;
+    static constexpr uint16_t HEXDIGITS_OFFSET = 0x0;
     static constexpr std::array<instr_impl, 16> impls = {
             &Chip8::subroutine_screen, &Chip8::jump, &Chip8::execute_subroutine,
             &Chip8::skip_if_x_eq_arg, &Chip8::skip_if_x_ne_arg, &Chip8::skip_if_x_eq_y,
@@ -130,19 +135,19 @@ private:
             { 0xF0, 0x80, 0xF0, 0x80, 0x80 }  // F
     }};
 
-    std::array<uint8_t, 16> v; // Sixteen 8 bit registers
-    uint16_t vi;  // 16 bit register that stores memory address
+    std::array<uint8_t, 16> v {}; // Sixteen 8 bit registers
+    uint16_t vi {};  // 16 bit register that stores memory address
     uint16_t pc; // program counter
-    std::stack<uint16_t> call_stack; // TODO: max call depth
-    uint16_t hex_digits_addr;
-    uint16_t program_size;
+    std::stack<uint16_t> call_stack;
     uint8_t key;
-    bool key_pressed;
+    bool key_pressed {};
 
-    std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
+    std::mt19937 rng;
     Memory memory;
     DelayTimer dt;
     Display display;
+
+    Program program;
 };
 
 #endif //CHIP8_CHIP8_H
