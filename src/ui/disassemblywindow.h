@@ -7,7 +7,8 @@
 
 class DisassemblyWindow {
 public:
-    DisassemblyWindow() : pc(0x200) {}
+    DisassemblyWindow(unsigned int starting_addr) : pc(starting_addr),
+    starting_addr(starting_addr) {}
     void load_program(const std::vector<uint8_t> &program);
     void show() const;
     void update_pc(unsigned int pc) { this->pc = pc; }
@@ -15,6 +16,7 @@ public:
 private:
     std::vector<std::string> disassembly;
     unsigned int pc;
+    unsigned int starting_addr;
 };
 
 #endif // DISASSEMBLYWINDOW_H

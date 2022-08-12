@@ -49,6 +49,8 @@ public:
 
     void run_instr(const uint16_t instr);
     bool run_program_instr();
+    void press_key(uint8_t key);
+    void reset_key() { key_pressed = false; }
 
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
@@ -57,6 +59,7 @@ public:
     uint8_t get_vf() const { return v[0xF]; }
     const Memory& get_mem() const { return memory; }
     const Display::Pixels& get_screen() const { return display.get_pixels(); }
+    uint8_t get_pressed_key() const { return (key_pressed) ? key : 0; }
 private:
     void subroutine_screen(uint16_t instr);
     void jump(uint16_t instr);
@@ -141,10 +144,12 @@ private:
     uint16_t vi;  // 16 bit register that stores memory address
     uint16_t pc; // program counter
     std::stack<uint16_t> call_stack; // TODO: max call depth
-    std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
     uint16_t hex_digits_addr;
     uint16_t program_size;
+    uint8_t key;
+    bool key_pressed;
 
+    std::mt19937 rng; // TODO: Potential bottleneck. We only need to generate 8 bit pseudo-random numbers
     Memory memory;
     DelayTimer dt;
     Display display;

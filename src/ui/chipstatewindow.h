@@ -12,6 +12,7 @@ private:
     unsigned int v[16];
     unsigned int vi;
     unsigned int pc;
+    unsigned int key;
 };
 
 #endif // CHIPSTATEWINDOW_H

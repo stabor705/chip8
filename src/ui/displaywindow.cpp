@@ -106,7 +106,7 @@ void DisplayWindow::show() {
     ImGui::End();
 }
 
-void DisplayWindow::update(const std::array<std::array<bool, 64>, 32> &pixels) {
+void DisplayWindow::update(const Pixels &pixels) {
     display.clear();
     for (int y = 0; y < 32; y++) {
         for (int x = 0; x < 64; x++) {

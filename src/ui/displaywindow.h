@@ -5,6 +5,7 @@
 
 constexpr unsigned int DISPLAY_WIDTH = 64;
 constexpr unsigned int DISPLAY_HEIGHT = 32;
+typedef std::array<std::array<bool, 64>, 32> Pixels;
 
 class OpenGLPixelDisplay {
 public:
@@ -43,7 +44,7 @@ public:
     void initialize() { display.initialize(); }
 
     void show();
-    void update(const std::array<std::array<bool, DISPLAY_WIDTH>, DISPLAY_HEIGHT> &pixels);
+    void update(const Pixels &pixels);
 private:
     OpenGLPixelDisplay display;
 };

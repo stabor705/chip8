@@ -35,6 +35,11 @@ bool Chip8::run_program_instr() {
     return true;
 }
 
+void Chip8::press_key(uint8_t key) {
+    key_pressed = true;
+    this->key = key;
+}
+
 void Chip8::run_instr(uint16_t instr) {
     uint16_t idx = (instr & 0xF000) >> 12;
     (this->*impls[idx])(instr);
@@ -54,7 +59,6 @@ void Chip8::subroutine_screen(uint16_t instr) {
 }
 
 void Chip8::jump(uint16_t instr) {
-    //TODO: jumping to current address is dangerous
     uint16_t addr = instr & 0x0FFF;
     pc = addr;
 }
@@ -153,15 +157,19 @@ void Chip8::draw(uint16_t instr) {
 }
 
 void Chip8::check_key(uint16_t instr) {
-//    pc += 2;
-//    //bool key_pressed = keyboard.is_pressed(get_x_reg(instr));
-
-//    uint8_t kind = instr & 0x00FF;
-//    if (kind == 0x9E && key_pressed)
-//        pc += 2;
-//    else if (kind == 0xA1 && !key_pressed)
-//        pc += 2;
-//    else throw UndefinedInstruction(instr);
+    pc += 2;
+    uint8_t kind = instr & 0x00FF;
+    if (kind == 0x9E) {
+        if (key_pressed)
+            pc += 2;
+        return;
+    }
+    else if (kind == 0xA1) {
+        if (!key_pressed)
+            pc += 2;
+        return;
+    }
+    throw UndefinedInstruction(instr);
 }
 
 void Chip8::time_and_vi(uint16_t instr) {
@@ -240,7 +248,8 @@ void Chip8::store_dt(uint16_t instr) {
 
 void Chip8::wait_for_keypress(uint16_t instr) {
     uint16_t x = get_x_reg_idx(instr);
-//    v[x] = keyboard.wait_for_key();
+    if (key_pressed && key == x)
+        pc += 2;
 }
 
 void Chip8::set_dt(uint16_t instr) {

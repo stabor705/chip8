@@ -43,16 +43,18 @@ public:
     void update_display(const std::array<std::array<bool, DISPLAY_WIDTH>, DISPLAY_HEIGHT> &pixels);
     void update_chip_state(const Chip8 &chip);
     void add_message(const std::string &msg);
-    void halt_controls();
+    void chip_halted();
 
     bool should_run_instr() const;
-
+    int get_key_pressed() const { return key_pressed; }
 
     ~UserInterface();
 private:
     static constexpr char const* glsl_version = "#version 330";
 
     static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+    static void handle_input(GLFWwindow *window, int key, int scancode, int action, int mods);
 
     void initialize_glfw();
     void initialize_imgui();
@@ -65,8 +67,8 @@ private:
     ControlsWindow controls_window;
     MessagingWindow messaging_window;
 
-
     GLFWwindow *window;
+    int key_pressed {};
 };
 
 #endif // USERINTERFACE_H

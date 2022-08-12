@@ -8,6 +8,7 @@ void ChipStateWindow::update(const Chip8 &chip) {
     }
     vi = chip.get_vi();
     pc = chip.get_pc();
+    key = chip.get_pressed_key();
 }
 
 void ChipStateWindow::show() const {
@@ -18,6 +19,7 @@ void ChipStateWindow::show() const {
         ImGui::Text("V%X: 0x%x", i, v[i]);
     }
     ImGui::Text("VI: 0x%x", vi);
+    ImGui::Text("Key: %x", key);
 
     ImGui::End();
 }

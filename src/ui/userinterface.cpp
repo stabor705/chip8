@@ -4,7 +4,12 @@
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_glfw.h>
 
-UserInterface::UserInterface() {
+#include <sstream>
+#include <functional>
+
+using namespace std::placeholders;
+
+UserInterface::UserInterface() : disassembly_window(0x200) {
     initialize_glfw();
     initialize_imgui();
     display_window.initialize();
@@ -49,12 +54,23 @@ void UserInterface::add_message(const std::string &msg) {
         messaging_window.add_message(msg);
 }
 
-void UserInterface::halt_controls() {
+void UserInterface::chip_halted() {
     controls_window.halt();
 }
 
 bool UserInterface::should_run_instr() const {
     return !controls_window.is_halted() || controls_window.should_run_next_frame();
+}
+
+void UserInterface::handle_input(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    UserInterface *ui = (UserInterface *)glfwGetWindowUserPointer(window);
+    std::stringstream ss;
+    ss << "Callback has been called with key " << key;
+    ui->add_message(ss.str());
+    if (action == GLFW_PRESS)
+        ui->key_pressed = key;
+    else if (action == GLFW_RELEASE && key == ui->key_pressed)
+        ui->key_pressed = 0;
 }
 
 UserInterface::~UserInterface() {
@@ -79,7 +95,9 @@ void UserInterface::initialize_glfw() {
     glfwSwapInterval(1);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         throw GladError();
+    glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, handle_input);
 }
 
 void UserInterface::initialize_imgui() {
