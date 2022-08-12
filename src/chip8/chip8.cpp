@@ -1,16 +1,4 @@
 #include "chip8.h"
-
-void DelayTimer::store(uint8_t value) {
-    store_tp = clock::now();
-    this->value = value;
-}
-
-uint8_t DelayTimer::read() {
-    auto ticks = chrono::floor<tick_duration>(clock::now() - store_tp).count();
-    if (ticks >= value) return 0;
-    else return value - ticks;
-}
-
 const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
         { 0x07, &Chip8::store_dt }, { 0x0A, &Chip8::wait_for_keypress },
         { 0x15, &Chip8::set_dt }, { 0x18, &Chip8::set_st },

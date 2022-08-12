@@ -3,15 +3,13 @@
 
 #include "chip8/mem.h"
 #include "chip8/display.h"
+#include "chip8/delaytimer.h"
 
 #include <random>
 #include <unordered_map>
 #include <exception>
 #include <sstream>
 #include <stack>
-#include <chrono>
-#include <memory>
-namespace chrono = std::chrono;
 
 class UndefinedInstruction : public std::exception {
 public:
@@ -28,19 +26,6 @@ private:
     std::string msg;
 };
 
-class DelayTimer {
-public:
-    DelayTimer() = default;
-    void store(uint8_t value);
-    uint8_t read();
-
-private:
-    using clock = chrono::steady_clock;
-    using tick_duration = chrono::duration<int64_t, std::ratio<1, 60>>; // Delay timer ticks with 60Hz frequency
-
-    clock::time_point store_tp;
-    uint8_t value;
-};
 
 class Chip8 {
 public:
