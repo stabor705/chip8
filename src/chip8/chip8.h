@@ -45,12 +45,13 @@ public:
     void release_key() { key_pressed = false; }
     void reset();
 
+    static constexpr size_t MEM_SIZE = 0xFFF;
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
     uint16_t get_pc() const { return pc; }
     void set_vi(uint16_t  idx, uint8_t value) { v[idx] = value; }
     uint8_t get_vf() const { return v[0xF]; }
-    const Memory& get_mem() const { return memory; }
+    const Memory<MEM_SIZE>& get_mem() const { return memory; }
     const Display::Pixels& get_screen() const { return display.get_pixels(); }
     uint8_t get_pressed_key() const { return (key_pressed) ? key : 0; }
 private:
@@ -143,7 +144,7 @@ private:
     bool key_pressed {};
 
     std::mt19937 rng;
-    Memory memory;
+    Memory<MEM_SIZE> memory;
     DelayTimer dt;
     Display display;
 
