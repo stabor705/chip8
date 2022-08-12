@@ -15,8 +15,8 @@ bool Display::draw_sprite(uint8_t x, uint8_t y, const std::vector<uint8_t> &spri
 }
 
 void Display::clear() {
-    for (int y = 0; y < 32; y++) {
-        for (int x = 0; x < 64; x++) {
+    for (int y = 0; y < HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
             pixels[y][x] = false;
         }
     }
