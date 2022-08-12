@@ -13,11 +13,7 @@
 
 class UndefinedInstruction : public std::exception {
 public:
-    UndefinedInstruction(uint16_t instr) {
-        std::stringstream ss;
-        ss << "Encountered undefined instruction " << std::hex << instr << '.';
-        msg = ss.str();
-    }
+    UndefinedInstruction(uint16_t instr);
     const char *what() const noexcept override {
         return msg.c_str();
     }
@@ -26,6 +22,15 @@ private:
     std::string msg;
 };
 
+class LogicError : public std::exception {
+public:
+    LogicError(uint16_t instr, const char *explanation);
+    const char *what() const noexcept override {
+        return msg.c_str();
+    }
+private:
+    std::string msg;
+};
 
 class Chip8 {
 public:

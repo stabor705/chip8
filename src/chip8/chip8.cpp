@@ -1,4 +1,18 @@
 #include "chip8.h"
+
+UndefinedInstruction::UndefinedInstruction(uint16_t instr) {
+    std::stringstream ss;
+    ss << "Encountered undefined instruction " << std::hex << (int)instr << '.';
+    msg = ss.str();
+}
+
+LogicError::LogicError(uint16_t instr, const char *explanation) {
+    std::stringstream ss;
+    ss << "Instruction " << std::hex << int(instr) << " contains logical error: "
+       << explanation;
+    msg = ss.str();
+}
+
 const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
         { 0x07, &Chip8::store_dt }, { 0x0A, &Chip8::wait_for_keypress },
         { 0x15, &Chip8::set_dt }, { 0x18, &Chip8::set_st },
@@ -39,6 +53,8 @@ void Chip8::subroutine_screen(uint16_t instr) {
         display.clear();
         return;
     } else if (instr == 0x00EE) {
+        if (call_stack.empty())
+            throw LogicError(instr, "Call stack is empty");
         pc = call_stack.top();
         call_stack.pop();
         return;
@@ -137,6 +153,8 @@ void Chip8::draw(uint16_t instr) {
     uint8_t x = get_x_reg(instr);
     uint8_t y = get_y_reg(instr);
     uint8_t arg = instr & 0x000F;
+    if (y + arg > Display::HEIGHT || x + 8 > Display::WIDTH)
+        throw LogicError(instr, "Program tries to draw out of bounds");
     std::vector<uint8_t> sprite(arg);
     for (int i = 0; i < arg; i++) {
         sprite[i] = memory.get(vi + i);
@@ -314,3 +332,5 @@ void Chip8::load_hex_digits(uint16_t addr) {
         }
     }
 }
+
+
