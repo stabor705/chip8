@@ -1,6 +1,7 @@
 #include "emulation.h"
 
 #include <sstream>
+#include <thread>
 
 const std::unordered_map<int, uint8_t> Emulation::key_bindings= {
     { 49, 0 }, { 50, 1 }, { 51, 2 }, { 52, 3 },
@@ -11,6 +12,8 @@ const std::unordered_map<int, uint8_t> Emulation::key_bindings= {
 
 void Emulation::run() {
     while (!ui.user_quit()) {
+        auto start = Clock::now();
+
         ui.update_chip_state(chip);
         ui.update_display(chip.get_screen());
 
@@ -27,6 +30,7 @@ void Emulation::run() {
                 ui.add_message(e.what());
             }
         }
+        std::this_thread::sleep_for(frame_time - (Clock::now() - start));
     }
 }
 
