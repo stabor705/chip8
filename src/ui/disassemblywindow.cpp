@@ -16,6 +16,8 @@ void DisassemblyWindow::load_program(const std::vector<uint8_t> &program) {
 void DisassemblyWindow::show() const {
     ImGui::Begin("Disassembly");
     for (int i = 0; i < disassembly.size(); i++) {
+        if (disassembly[i].empty())
+            continue;
         ImGui::Text("%x: %s %s", starting_addr + i * 2, disassembly[i].c_str(),
                     (i * 2 + starting_addr == pc) ? "<--" : "");
         if (i * 2 + starting_addr == pc)

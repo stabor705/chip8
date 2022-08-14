@@ -1,6 +1,5 @@
 #include "emulation.h"
 
-#include <sstream>
 #include <thread>
 
 const std::unordered_map<int, uint8_t> Emulation::key_bindings= {
@@ -24,7 +23,10 @@ void Emulation::run() {
             chip.reset();
         try {
             if (ui.should_run()) {
-                while (!chip.display_changed() && chip.run_program_instr());
+                while (
+                       !chip.display_changed() && chip.run_program_instr() &&
+                       frame_time >= Clock::now() - start
+                       );
             } else if (ui.should_step()) {
                 chip.run_program_instr();
             }
@@ -55,8 +57,5 @@ void Emulation::handle_key(int key) {
     auto it = key_bindings.find(key);
     if (it != key_bindings.end()) {
         chip.press_key(it->second);
-        std::stringstream ss;
-        ss << (int)it->second << " has been pressed";
-        ui.add_message(ss.str());
     }
 }

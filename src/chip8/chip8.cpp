@@ -183,13 +183,14 @@ void Chip8::draw(uint16_t instr) {
 
 void Chip8::check_key(uint16_t instr) {
     uint8_t kind = instr & 0x00FF;
+    uint8_t x = get_x_reg(instr);
     if (kind == 0x9E) {
-        if (key_pressed)
+        if (key_pressed && key == x)
             pc += 2;
         return;
     }
     else if (kind == 0xA1) {
-        if (!key_pressed)
+        if (!key_pressed || key != x)
             pc += 2;
         return;
     }
@@ -301,8 +302,10 @@ void Chip8::store_dt(uint16_t instr) {
 
 void Chip8::wait_for_keypress(uint16_t instr) {
     uint16_t x = get_x_reg_idx(instr);
-    if (key_pressed && key == x)
-        pc += 2;
+    if (key_pressed)
+        v[x] = key;
+    else
+        pc -= 2;
 }
 
 void Chip8::set_dt(uint16_t instr) {
