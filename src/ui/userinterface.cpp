@@ -48,6 +48,7 @@ void UserInterface::update_display(const Pixels &pixels) {
 void UserInterface::update_chip_state(const Chip8 &chip) {
     chip_state_window.update(chip);
     disassembly_window.update_pc(chip.get_pc());
+    display_window.update(chip.get_screen());
 }
 
 void UserInterface::add_message(const std::string &msg) {
@@ -56,10 +57,6 @@ void UserInterface::add_message(const std::string &msg) {
 
 void UserInterface::chip_halted() {
     controls_window.halt();
-}
-
-bool UserInterface::should_run_instr() const {
-    return !controls_window.is_halted() || controls_window.should_run_next_frame();
 }
 
 void UserInterface::handle_input(GLFWwindow *window, int key, int scancode, int action, int mods) {

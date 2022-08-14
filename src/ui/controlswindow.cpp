@@ -8,7 +8,7 @@ void ControlsWindow::show() {
         halted = !ImGui::Button("Run");
     else
         halted = ImGui::Button("Halt");
-    next_frame = ImGui::Button("Next frame");
+    next_instr = ImGui::Button("Step");
     reset = ImGui::Button("Reset");
     ImGui::End();
 }

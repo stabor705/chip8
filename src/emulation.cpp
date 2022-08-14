@@ -15,20 +15,22 @@ void Emulation::run() {
         auto start = Clock::now();
 
         ui.update_chip_state(chip);
-        ui.update_display(chip.get_screen());
 
         ui.render_frame();
         ui.process_input();
         handle_key(ui.get_key_pressed());
+
         if (ui.should_reset_chip())
             chip.reset();
-        if (ui.should_run_instr()) {
-            try {
+        try {
+            if (ui.should_run()) {
                 while (!chip.display_changed() && chip.run_program_instr());
+            } else if (ui.should_step()) {
+                chip.run_program_instr();
             }
-            catch (std::exception &e) {
-                ui.add_message(e.what());
-            }
+        }
+        catch (std::exception &e) {
+            ui.add_message(e.what());
         }
         std::this_thread::sleep_for(frame_time - (Clock::now() - start));
     }

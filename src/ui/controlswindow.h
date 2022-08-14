@@ -10,11 +10,11 @@ public:
     void halt() { halted = true; }
 
     bool is_halted() const { return halted; }
-    bool should_run_next_frame() const { return next_frame; }
+    bool should_step() const { return next_instr; }
     bool should_reset() const { return reset; }
 public:
     bool halted;
-    bool next_frame {};
+    bool next_instr {};
     bool reset {};
 };
 

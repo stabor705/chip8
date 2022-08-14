@@ -46,7 +46,8 @@ public:
     void add_message(const std::string &msg);
     void chip_halted();
 
-    bool should_run_instr() const;
+    bool should_run() const { return !controls_window.is_halted(); }
+    bool should_step() const { return controls_window.is_halted() && controls_window.should_step(); }
     int get_key_pressed() const { return key_pressed; }
     bool should_reset_chip() { return controls_window.should_reset(); }
 
