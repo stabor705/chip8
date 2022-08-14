@@ -35,15 +35,15 @@ void Chip8::load_program(const std::vector<uint8_t> &program) {
 }
 
 void Chip8::load_program() {
-    for (int i = 0; i < program.size(); i++) {
-        memory.set(PROGRAM_OFFSET + i, program[i]);
-    }
+    std::copy(program.begin(), program.end(), memory.begin() + PROGRAM_OFFSET);
 }
 
 bool Chip8::run_program_instr() {
     if (pc >= PROGRAM_OFFSET + program.size())
         return false;
-    uint16_t instr = memory.fetch_instruction(pc);
+    uint16_t instr = memory[pc];
+    instr = instr << 8;
+    instr += memory[pc + 1];
     pc += 2;
     run_instr(instr);
     return true;
@@ -63,7 +63,7 @@ void Chip8::reset() {
     key_pressed = false;
     dt.store(0);
     display.clear();
-    memory.clear();
+    std::fill(memory.begin(), memory.end(), 0);
     load_hex_digits();
     load_program();
 }
@@ -179,7 +179,7 @@ void Chip8::draw(uint16_t instr) {
         throw LogicError(instr, "Program tries to draw out of bounds");
     std::vector<uint8_t> sprite(arg);
     for (int i = 0; i < arg; i++) {
-        sprite[i] = memory.get(vi + i);
+        sprite[i] = memory[vi + i];
     }
     v[0xF] = display.draw_sprite(x, y, sprite);
     drawed_recently = true;
@@ -329,7 +329,7 @@ void Chip8::set_i_to_hexdigit(uint16_t instr) {
 void Chip8::store_bcd(uint16_t instr) {
     uint8_t x = get_x_reg(instr);
     for (int i = 2; i >= 0; i--) {
-        memory.set(vi + i, x % 10);
+        memory[vi + i] =  x % 10;
         x /= 10;
     }
 }
@@ -337,7 +337,7 @@ void Chip8::store_bcd(uint16_t instr) {
 void Chip8::store_registers(uint16_t instr) {
     uint16_t x = get_x_reg_idx(instr);
     for (int i = 0; i <= x; i++) {
-        memory.set(vi + i, v[i]);
+        memory[vi + i] =  v[i];
     }
     vi += x + 1;
 }
@@ -345,7 +345,7 @@ void Chip8::store_registers(uint16_t instr) {
 void Chip8::fill_registers(uint16_t instr) {
     uint16_t x = get_x_reg_idx(instr);
     for (int i = 0; i <= x; i++) {
-        v[i] = memory.get(vi + i);
+        v[i] = memory[vi + i];
     }
     vi += x + 1;
 }
@@ -372,7 +372,7 @@ void Chip8::load_hex_digits() {
     auto addr = HEXDIGITS_OFFSET;
     for (const auto &hex_digit : hex_digits) {
         for (const auto byte : hex_digit) {
-            memory.set(addr, byte);
+            memory[addr] =  byte;
             addr++;
         }
     }

@@ -1,7 +1,6 @@
 #ifndef CHIP8_CHIP8_H
 #define CHIP8_CHIP8_H
 
-#include "chip8/mem.h"
 #include "chip8/display.h"
 #include "chip8/delaytimer.h"
 
@@ -9,8 +8,6 @@
 #include <exception>
 #include <sstream>
 #include <stack>
-
-typedef std::vector<uint8_t> Program;
 
 class UndefinedInstruction : public std::exception {
 public:
@@ -33,6 +30,9 @@ private:
     std::string msg;
 };
 
+using Program = std::vector<uint8_t>;
+using Memory = std::array<uint8_t, 0xFFF>;
+
 class Chip8 {
 public:
     Chip8();
@@ -44,13 +44,12 @@ public:
     void release_key() { key_pressed = false; }
     void reset();
 
-    static constexpr size_t MEM_SIZE = 0xFFF;
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
     uint16_t get_pc() const { return pc; }
     void set_vi(uint16_t  idx, uint8_t value) { v[idx] = value; }
     uint8_t get_vf() const { return v[0xF]; }
-    const Memory<MEM_SIZE>& get_mem() const { return memory; }
+    const Memory& get_mem() const { return memory; }
     const Display::Pixels& get_screen() const { return display.get_pixels(); }
     uint8_t get_pressed_key() const { return (key_pressed) ? key : 0; }
     bool display_changed();
@@ -144,7 +143,7 @@ private:
     bool drawed_recently {};
 
     std::mt19937 rng;
-    Memory<MEM_SIZE> memory;
+    Memory memory;
     DelayTimer dt;
     Display display;
 

@@ -151,9 +151,9 @@ TEST_F(InstructionsTests, TestAddXToI) {
 TEST_F(InstructionsTests, TestBCD) {
     uint16_t vi = chip.get_vi();
     chip.run_instr(0xFA33);
-    ASSERT_EQ(chip.get_mem().get(vi), 2);
-    ASSERT_EQ(chip.get_mem().get(vi + 1), 5);
-    ASSERT_EQ(chip.get_mem().get(vi + 2), 5);
+    ASSERT_EQ(chip.get_mem()[vi], 2);
+    ASSERT_EQ(chip.get_mem()[vi + 1], 5);
+    ASSERT_EQ(chip.get_mem()[vi + 2], 5);
 }
 
 TEST_F(InstructionsTests, TestSubroutines) {
