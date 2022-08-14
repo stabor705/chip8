@@ -30,6 +30,16 @@ private:
     std::string msg;
 };
 
+class ProgramSizeError : public std::exception {
+public:
+    ProgramSizeError(size_t size);
+    const char *what() const noexcept override {
+        return msg.c_str();
+    }
+private:
+    std::string msg;
+};
+
 using Program = std::vector<uint8_t>;
 using Memory = std::array<uint8_t, 0xFFF>;
 

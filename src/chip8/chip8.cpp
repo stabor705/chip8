@@ -3,23 +3,19 @@
 UndefinedInstruction::UndefinedInstruction(uint16_t instr) {
     std::stringstream ss;
     ss << "Encountered undefined instruction " << std::hex << (int)instr << '.';
-    msg = ss.str();
 }
 
 LogicError::LogicError(uint16_t instr, const char *explanation) {
     std::stringstream ss;
     ss << "Instruction " << std::hex << int(instr) << " contains logical error: "
        << explanation;
-    msg = ss.str();
 }
 
-//const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
-//        { 0x07, &Chip8::store_dt }, { 0x0A, &Chip8::wait_for_keypress },
-//        { 0x15, &Chip8::set_dt }, { 0x18, &Chip8::set_st },
-//        { 0x1E, &Chip8::add_x_to_i }, { 0x29, &Chip8::set_i_to_hexdigit },
-//        { 0x33, &Chip8::store_bcd }, { 0x55, &Chip8::store_registers },
-//        { 0x65, &Chip8::fill_registers }
-//};
+ProgramSizeError::ProgramSizeError(size_t size) {
+    std::stringstream ss(msg);
+    ss << "Program of size " << size << " bytes is too large";
+}
+
 constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
 constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
@@ -29,7 +25,8 @@ Chip8::Chip8() : pc(PROGRAM_OFFSET), rng(chrono::steady_clock::now().time_since_
 }
 
 void Chip8::load_program(const std::vector<uint8_t> &program) {
-    // TODO: maybe check program length?
+    if (program.size() > memory.size() - PROGRAM_OFFSET)
+        throw ProgramSizeError(program.size());
     this->program = program;
     load_program();
 }
@@ -92,7 +89,6 @@ void Chip8::subroutine_screen(uint16_t instr) {
         call_stack.pop();
         return;
     }
-    // Ignore machine code related instruction
 }
 
 void Chip8::jump(uint16_t instr) {
@@ -202,7 +198,6 @@ void Chip8::check_key(uint16_t instr) {
 
 void Chip8::time_and_vi(uint16_t instr) {
     uint8_t kind = instr & 0x00FF;
-//    (this->*f_ops.at(kind))(instr);
     switch (kind) {
     case 0x07:
         store_dt(instr);
