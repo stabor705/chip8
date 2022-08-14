@@ -5,6 +5,7 @@
 #include "ui/userinterface.h"
 
 #include <ios>
+#include <unordered_map>
 
 class Emulation {
 public:

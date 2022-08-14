@@ -6,7 +6,6 @@
 #include "chip8/delaytimer.h"
 
 #include <random>
-#include <unordered_map>
 #include <exception>
 #include <sstream>
 #include <stack>
@@ -54,6 +53,7 @@ public:
     const Memory<MEM_SIZE>& get_mem() const { return memory; }
     const Display::Pixels& get_screen() const { return display.get_pixels(); }
     uint8_t get_pressed_key() const { return (key_pressed) ? key : 0; }
+    bool display_changed();
 private:
     void subroutine_screen(uint16_t instr);
     void jump(uint16_t instr);
@@ -116,7 +116,6 @@ private:
         &Chip8::x_xor_y, &Chip8::add_y_to_x, &Chip8::sub_y_from_x,
         &Chip8::shift_y_right, &Chip8::y_minus_x,
     };
-    static const std::unordered_map<uint8_t, instr_impl> f_ops;
     static constexpr std::array<std::array<uint8_t, 5>, 16> hex_digits = {{
             { 0xF0, 0x90, 0x90, 0x90, 0xF0 }, // 0
             { 0x20, 0x60, 0x20, 0x20, 0x70 }, // 1
@@ -142,6 +141,7 @@ private:
     std::stack<uint16_t> call_stack;
     uint8_t key;
     bool key_pressed {};
+    bool drawed_recently {};
 
     std::mt19937 rng;
     Memory<MEM_SIZE> memory;

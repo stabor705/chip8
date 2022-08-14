@@ -21,9 +21,7 @@ void Emulation::run() {
             chip.reset();
         if (ui.should_run_instr()) {
             try {
-                if (!chip.run_program_instr()) {
-                    ui.chip_halted();
-                }
+                while (!chip.display_changed() && chip.run_program_instr());
             }
             catch (std::exception &e) {
                 ui.add_message(e.what());

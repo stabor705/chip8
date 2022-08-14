@@ -13,13 +13,13 @@ LogicError::LogicError(uint16_t instr, const char *explanation) {
     msg = ss.str();
 }
 
-const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
-        { 0x07, &Chip8::store_dt }, { 0x0A, &Chip8::wait_for_keypress },
-        { 0x15, &Chip8::set_dt }, { 0x18, &Chip8::set_st },
-        { 0x1E, &Chip8::add_x_to_i }, { 0x29, &Chip8::set_i_to_hexdigit },
-        { 0x33, &Chip8::store_bcd }, { 0x55, &Chip8::store_registers },
-        { 0x65, &Chip8::fill_registers }
-};
+//const std::unordered_map<uint8_t, Chip8::instr_impl> Chip8::f_ops = {
+//        { 0x07, &Chip8::store_dt }, { 0x0A, &Chip8::wait_for_keypress },
+//        { 0x15, &Chip8::set_dt }, { 0x18, &Chip8::set_st },
+//        { 0x1E, &Chip8::add_x_to_i }, { 0x29, &Chip8::set_i_to_hexdigit },
+//        { 0x33, &Chip8::store_bcd }, { 0x55, &Chip8::store_registers },
+//        { 0x65, &Chip8::fill_registers }
+//};
 constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
 constexpr std::array<Chip8::instr_impl, 8> Chip8::arithmetic_ops;
 
@@ -55,9 +55,7 @@ void Chip8::press_key(uint8_t key) {
 }
 
 void Chip8::reset() {
-    for (int i = 0; i < 16; i++) {
-        v[i] = 0;
-    }
+    std::fill(v.begin(), v.end(), 0);
     vi = 0;
     pc = PROGRAM_OFFSET;
     while(!call_stack.empty())
@@ -68,6 +66,14 @@ void Chip8::reset() {
     memory.clear();
     load_hex_digits();
     load_program();
+}
+
+bool Chip8::display_changed() {
+    if (drawed_recently) {
+        drawed_recently = false;
+        return true;
+    }
+    return false;
 }
 
 void Chip8::run_instr(uint16_t instr) {
@@ -176,6 +182,7 @@ void Chip8::draw(uint16_t instr) {
         sprite[i] = memory.get(vi + i);
     }
     v[0xF] = display.draw_sprite(x, y, sprite);
+    drawed_recently = true;
 }
 
 void Chip8::check_key(uint16_t instr) {
@@ -195,7 +202,38 @@ void Chip8::check_key(uint16_t instr) {
 
 void Chip8::time_and_vi(uint16_t instr) {
     uint8_t kind = instr & 0x00FF;
-    (this->*f_ops.at(kind))(instr);
+//    (this->*f_ops.at(kind))(instr);
+    switch (kind) {
+    case 0x07:
+        store_dt(instr);
+        break;
+    case 0x0A:
+        wait_for_keypress(instr);
+        break;
+    case 0x15:
+        set_dt(instr);
+        break;
+    case 0x18:
+        set_st(instr);
+        break;
+    case 0x1E:
+        add_x_to_i(instr);
+        break;
+    case 0x29:
+        set_i_to_hexdigit(instr);
+        break;
+    case 0x33:
+        store_bcd(instr);
+        break;
+    case 0x55:
+        store_registers(instr);
+        break;
+    case 0x65:
+        fill_registers(instr);
+        break;
+    default:
+        throw UndefinedInstruction(instr);
+    }
 }
 
 void Chip8::store_y_in_x(uint16_t instr) {
