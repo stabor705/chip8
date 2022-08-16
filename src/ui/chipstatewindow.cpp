@@ -12,14 +12,17 @@ void ChipStateWindow::update(const Chip8 &chip) {
 }
 
 void ChipStateWindow::show() const {
-    ImGui::Begin("Chip state");
-
+    ImGui::BeginChild("Chip State Window", ImVec2(6 * 32, 10 * 32), false, 0);
+    ImGui::BeginChild("Label", ImVec2(0, ImGui::GetTextLineHeightWithSpacing()));
+    ImGui::Text("%s", "Chip state:");
+    ImGui::EndChild();
+    ImGui::BeginChild("Chip State", ImVec2(0, 0), true);
     ImGui::Text("PC: 0x%x", pc);
     for (int i = 0; i < 16; i++) {
         ImGui::Text("V%X: 0x%x", i, v[i]);
     }
     ImGui::Text("VI: 0x%x", vi);
     ImGui::Text("Key: %x", key);
-
-    ImGui::End();
+    ImGui::EndChild();
+    ImGui::EndChild();
 }

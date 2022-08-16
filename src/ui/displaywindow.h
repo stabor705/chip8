@@ -40,7 +40,7 @@ private:
 
 class DisplayWindow {
 public:
-    DisplayWindow() : display(4) {}
+    DisplayWindow() : display(10) {}
     void initialize() { display.initialize(); }
 
     void show();

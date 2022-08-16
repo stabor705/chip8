@@ -101,9 +101,11 @@ void OpenGLPixelDisplay::initialize_rendering() {
 }
 
 void DisplayWindow::show() {
-    ImGui::Begin("Display");
-    ImGui::Image((void*)(intptr_t)display.get_texture(), ImVec2(400, 300));
-    ImGui::End();
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::BeginChild("Display", ImVec2(640, 320), true);
+    ImGui::Image((void*)(intptr_t)display.get_texture(), ImVec2(640, 320));
+    ImGui::EndChild();
+    ImGui::PopStyleVar();
 }
 
 void DisplayWindow::update(const Pixels &pixels) {

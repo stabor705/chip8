@@ -12,20 +12,39 @@ using namespace std::placeholders;
 UserInterface::UserInterface() : disassembly_window(0x200) {
     initialize_glfw();
     initialize_imgui();
+    ImVec2 item_spacing = ImGui::GetStyle().ItemSpacing;
+    ImVec2 window_padding = ImGui::GetStyle().WindowPadding;
+    window_width = 32 * 32 + window_padding.x * 2 + item_spacing.x * 2;
+    window_height = 20 * 32 + window_padding.y * 2 + item_spacing.y * 2;
+    glfwSetWindowSize(window, window_width, window_height);
     display_window.initialize();
 }
 
-void UserInterface::render_frame() {
+void UserInterface::show() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    disassembly_window.show();
+    ImGui::SetNextWindowSize(ImVec2(window_width, window_height));
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
+    ImGui::Begin("Main", NULL, window_flags);
+
     display_window.show();
+    ImGui::SameLine();
+    disassembly_window.show();
+    ImGui::SameLine();
     chip_state_window.show();
+    ImGui::BeginChild("Input", ImVec2(8 * 32, 10 * 32 + 10), false, ImGuiWindowFlags_NoScrollbar);
     controls_window.show();
+    keyboard_window.show();
+    ImGui::EndChild();
+    ImGui::SameLine();
     messaging_window.show();
 
+    ImGui::End();
     ImGui::Render();
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -59,13 +78,13 @@ void UserInterface::chip_halted() {
     controls_window.halt();
 }
 
-void UserInterface::handle_input(GLFWwindow *window, int key, int scancode, int action, int mods) {
-    UserInterface *ui = (UserInterface *)glfwGetWindowUserPointer(window);
-    if (action == GLFW_PRESS)
-        ui->key_pressed = key;
-    else if (action == GLFW_RELEASE && key == ui->key_pressed)
-        ui->key_pressed = 0;
-}
+//void UserInterface::handle_input(GLFWwindow *window, int key, int scancode, int action, int mods) {
+//    UserInterface *ui = (UserInterface *)glfwGetWindowUserPointer(window);
+//    if (action == GLFW_PRESS)
+//        ui->key_pressed = key;
+//    else if (action == GLFW_RELEASE && key == ui->key_pressed)
+//        ui->key_pressed = 0;
+//}
 
 UserInterface::~UserInterface() {
     free_glfw();
@@ -82,7 +101,7 @@ void UserInterface::initialize_glfw() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(1024, 512, "chip8 emulator", NULL, NULL);
+    window = glfwCreateWindow(1, 1, "chip8 emulator", NULL, NULL);
     if (!window)
         throw GlfwError();
     glfwMakeContextCurrent(window);
@@ -91,7 +110,8 @@ void UserInterface::initialize_glfw() {
         throw GladError();
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetKeyCallback(window, handle_input);
+//    glfwSetKeyCallback(window, handle_input);
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
 }
 
 void UserInterface::initialize_imgui() {

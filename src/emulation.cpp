@@ -2,12 +2,12 @@
 
 #include <thread>
 
-const std::unordered_map<int, uint8_t> Emulation::key_bindings= {
-    { 49, 0 }, { 50, 1 }, { 51, 2 }, { 52, 3 },
-    { 81, 4 }, { 87, 5 }, { 69, 6 }, { 82, 7 },
-    { 65, 8 }, { 83, 9 }, { 68, 10 }, { 70, 11 },
-    { 90, 12 }, { 88, 13 }, { 67, 14 }, { 86, 15 }
-};
+//const std::unordered_map<int, uint8_t> Emulation::key_bindings= {
+//    { 49, 0 }, { 50, 1 }, { 51, 2 }, { 52, 3 },
+//    { 81, 4 }, { 87, 5 }, { 69, 6 }, { 82, 7 },
+//    { 65, 8 }, { 83, 9 }, { 68, 10 }, { 70, 11 },
+//    { 90, 12 }, { 88, 13 }, { 67, 14 }, { 86, 15 }
+//};
 
 void Emulation::run() {
     while (!ui.user_quit()) {
@@ -15,7 +15,7 @@ void Emulation::run() {
 
         ui.update_chip_state(chip);
 
-        ui.render_frame();
+        ui.show();
         ui.process_input();
         handle_key(ui.get_key_pressed());
 
@@ -50,12 +50,9 @@ void Emulation::load_program(std::istream &is) {
 }
 
 void Emulation::handle_key(int key) {
-    if (key == 0) {
+    if (key == -1) {
         chip.release_key();
         return;
     }
-    auto it = key_bindings.find(key);
-    if (it != key_bindings.end()) {
-        chip.press_key(it->second);
-    }
+    chip.press_key(key);
 }

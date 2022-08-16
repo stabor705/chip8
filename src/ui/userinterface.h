@@ -6,6 +6,7 @@
 #include "ui/chipstatewindow.h"
 #include "ui/controlswindow.h"
 #include "ui/messagingwindow.h"
+#include "ui/keyboardwindow.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -36,19 +37,19 @@ public:
     UserInterface();
 
     bool user_quit() { return glfwWindowShouldClose(window); }
-    void render_frame();
+    void show();
     void process_input();
 
     void run_disassembler(const std::vector<uint8_t> &program);
 
     void update_display(const Pixels &pixels);
-    void update_chip_state(const Chip8 &chip);
+    void update_chip_state(const Chip8 &chip);;
     void add_message(const std::string &msg);
     void chip_halted();
 
     bool should_run() const { return !controls_window.is_halted(); }
     bool should_step() const { return controls_window.is_halted() && controls_window.should_step(); }
-    int get_key_pressed() const { return key_pressed; }
+    int get_key_pressed() const { return keyboard_window.get_key(); }
     bool should_reset_chip() { return controls_window.should_reset(); }
 
 
@@ -70,9 +71,12 @@ private:
     ChipStateWindow chip_state_window;
     ControlsWindow controls_window;
     MessagingWindow messaging_window;
+    KeyboardWindow keyboard_window;
 
     GLFWwindow *window;
     int key_pressed {};
+    unsigned int window_width;
+    unsigned int window_height;
 };
 
 #endif // USERINTERFACE_H

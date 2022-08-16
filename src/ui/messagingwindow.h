@@ -6,7 +6,7 @@
 
 class MessagingWindow {
 public:
-    void show() const;
+    void show();
     void add_message(const std::string &msg);
 private:
     std::vector<std::string> messages;

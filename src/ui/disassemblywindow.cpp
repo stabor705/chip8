@@ -14,7 +14,11 @@ void DisassemblyWindow::load_program(const std::vector<uint8_t> &program) {
 }
 
 void DisassemblyWindow::show() const {
-    ImGui::Begin("Disassembly");
+    ImGui::BeginChild("Disassembly Window", ImVec2(32 * 6, 32 * 10), false, 0);
+    ImGui::BeginChild("Label", ImVec2(0, ImGui::GetTextLineHeightWithSpacing()), false, 0);
+    ImGui::Text("%s", "Disassembly:");
+    ImGui::EndChild();
+    ImGui::BeginChild("Disassembly", ImVec2(0, 0), true, 0);
     for (int i = 0; i < disassembly.size(); i++) {
         if (disassembly[i].empty())
             continue;
@@ -23,5 +27,6 @@ void DisassemblyWindow::show() const {
         if (i * 2 + starting_addr == pc)
             ImGui::SetScrollHereY(0);
     }
-    ImGui::End();
+    ImGui::EndChild();
+    ImGui::EndChild();
 }
