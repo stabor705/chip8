@@ -7,7 +7,7 @@
 
 class KeyboardWindow {
 public:
-    void show();
+    void show(float width, float height);
     int get_key() const;
 private:
     static constexpr ImVec4 key_button_color{0.48f, 0.27f, 0.58f, 1};

@@ -5,26 +5,24 @@
 #include <imgui_impl_glfw.h>
 
 #include <sstream>
-#include <functional>
-
-using namespace std::placeholders;
 
 UserInterface::UserInterface() : disassembly_window(0x200) {
     initialize_glfw();
     initialize_imgui();
-    ImVec2 item_spacing = ImGui::GetStyle().ItemSpacing;
-    ImVec2 window_padding = ImGui::GetStyle().WindowPadding;
-    window_width = 32 * 32 + window_padding.x * 2 + item_spacing.x * 2;
-    window_height = 20 * 32 + window_padding.y * 2 + item_spacing.y * 2;
-    glfwSetWindowSize(window, window_width, window_height);
     display_window.initialize();
 }
 
 void UserInterface::show() {
+    int window_width, window_height;
+    glfwGetWindowSize(window, &window_width, &window_height);
+    float unit_w = window_width / 32.0f;
+    float unit_h = window_height / 20.0f;
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+    ImVec2 item_spacing = ImGui::GetStyle().ItemSpacing;
     ImGui::SetNextWindowSize(ImVec2(window_width, window_height));
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration;
@@ -32,17 +30,17 @@ void UserInterface::show() {
     window_flags |= ImGuiWindowFlags_NoScrollWithMouse;
     ImGui::Begin("Main", NULL, window_flags);
 
-    display_window.show();
+    display_window.show(unit_w * 20, unit_h * 10);
     ImGui::SameLine();
-    disassembly_window.show();
+    disassembly_window.show(unit_w * 6, unit_h * 10);
     ImGui::SameLine();
-    chip_state_window.show();
-    ImGui::BeginChild("Input", ImVec2(8 * 32, 10 * 32 + 10), false, ImGuiWindowFlags_NoScrollbar);
-    controls_window.show();
-    keyboard_window.show();
+    chip_state_window.show(0, unit_h * 10);
+    ImGui::BeginChild("Input", ImVec2(unit_w * 8, 0), false, ImGuiWindowFlags_NoScrollbar);
+    controls_window.show(unit_w * 8, unit_h * 2);
+    keyboard_window.show(unit_w * 8, 0);
     ImGui::EndChild();
     ImGui::SameLine();
-    messaging_window.show();
+    messaging_window.show(0, 0);
 
     ImGui::End();
     ImGui::Render();
@@ -101,7 +99,7 @@ void UserInterface::initialize_glfw() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(1, 1, "chip8 emulator", NULL, NULL);
+    window = glfwCreateWindow(1024, 512, "chip8 emulator", NULL, NULL);
     if (!window)
         throw GlfwError();
     glfwMakeContextCurrent(window);
@@ -111,7 +109,6 @@ void UserInterface::initialize_glfw() {
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 //    glfwSetKeyCallback(window, handle_input);
-    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
 }
 
 void UserInterface::initialize_imgui() {

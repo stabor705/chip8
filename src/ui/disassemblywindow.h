@@ -10,7 +10,7 @@ public:
     DisassemblyWindow(unsigned int starting_addr) : pc(starting_addr),
     starting_addr(starting_addr) {}
     void load_program(const std::vector<uint8_t> &program);
-    void show() const;
+    void show(float width, float height) const;
     void update_pc(unsigned int pc) { this->pc = pc; }
 
 private:

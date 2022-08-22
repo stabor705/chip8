@@ -13,8 +13,8 @@ void DisassemblyWindow::load_program(const std::vector<uint8_t> &program) {
     }
 }
 
-void DisassemblyWindow::show() const {
-    ImGui::BeginChild("Disassembly Window", ImVec2(32 * 6, 32 * 10), false, 0);
+void DisassemblyWindow::show(float width, float height) const {
+    ImGui::BeginChild("Disassembly Window", ImVec2(width, height), false, 0);
     ImGui::BeginChild("Label", ImVec2(0, ImGui::GetTextLineHeightWithSpacing()), false, 0);
     ImGui::Text("%s", "Disassembly:");
     ImGui::EndChild();

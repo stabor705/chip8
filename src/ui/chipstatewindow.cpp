@@ -11,8 +11,8 @@ void ChipStateWindow::update(const Chip8 &chip) {
     key = chip.get_pressed_key();
 }
 
-void ChipStateWindow::show() const {
-    ImGui::BeginChild("Chip State Window", ImVec2(6 * 32, 10 * 32), false, 0);
+void ChipStateWindow::show(float width, float height) const {
+    ImGui::BeginChild("Chip State Window", ImVec2(width, height), false, 0);
     ImGui::BeginChild("Label", ImVec2(0, ImGui::GetTextLineHeightWithSpacing()));
     ImGui::Text("%s", "Chip state:");
     ImGui::EndChild();

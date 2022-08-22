@@ -3,9 +3,8 @@
 #include <imgui.h>
 #include <string>
 
-void MessagingWindow::show() {
-    ImVec2 item_spacing = ImGui::GetStyle().ItemSpacing;
-    ImVec2 size(24 * 32 + item_spacing.x, 10 * 32 + item_spacing.y);
+void MessagingWindow::show(float height, float width) {
+    ImVec2 size(height, width);
     ImGui::BeginChild("Messages", size, true, 0);
     for (const auto &msg : messages) {
         ImGui::Text("%s", msg.c_str());

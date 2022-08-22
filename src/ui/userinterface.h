@@ -75,8 +75,6 @@ private:
 
     GLFWwindow *window;
     int key_pressed {};
-    unsigned int window_width;
-    unsigned int window_height;
 };
 
 #endif // USERINTERFACE_H

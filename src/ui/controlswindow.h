@@ -7,7 +7,7 @@ class ControlsWindow {
 public:
     ControlsWindow() : halted(true) {}
 
-    void show();
+    void show(float width, float height);
     void halt() { halted = true; }
 
     bool is_halted() const { return halted; }

@@ -7,7 +7,7 @@ class ChipStateWindow
 {
 public:
     void update(const Chip8 &chip);
-    void show() const;
+    void show(float width, float height) const;
 private:
     unsigned int v[16];
     unsigned int vi;
