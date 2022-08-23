@@ -20,10 +20,10 @@ void Emulation::run() {
             chip.reset();
         try {
             if (ui.should_run()) {
-                while (
-                       !chip.display_changed() && chip.run_program_instr() &&
-                       frame_time >= Clock::now() - start
-                       );
+                for (int i = 0;
+                     !chip.display_changed() && frame_time >= Clock::now() - start &&
+                     i < instr_per_frame && chip.run_program_instr();
+                     i++);
             } else if (ui.should_step()) {
                 chip.run_program_instr();
             }
@@ -35,7 +35,7 @@ void Emulation::run() {
     }
 }
 
-void Emulation::load_program(fs::path filepath) {
+void Emulation::load_program(const fs::path &filepath) {
     std::vector<uint8_t> program;
     std::ifstream file(filepath);
     while (!file.eof()) {

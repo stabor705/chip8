@@ -2,8 +2,8 @@
 
 bool Display::draw_sprite(uint8_t x, uint8_t y, const std::vector<uint8_t> &sprite) {
     bool collided = false;
-    for (int row = 0; row < sprite.size(); row++) {
-        for (int col = 0; col < 8; col++) {
+    for (int row = 0; row < sprite.size() && row + y < HEIGHT; row++) {
+        for (int col = 0; col < 8 && col + x < WIDTH; col++) {
             bool pixel = pixels[row + y][col + x];
             bool sprite_pixel = sprite[row] & (128 >> col);
             if (pixel && sprite_pixel)

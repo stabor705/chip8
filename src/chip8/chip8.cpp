@@ -174,7 +174,7 @@ void Chip8::draw(uint16_t instr) {
     uint8_t x = get_x_reg(instr);
     uint8_t y = get_y_reg(instr);
     uint8_t arg = instr & 0x000F;
-    if (y + arg > Display::HEIGHT || x + 8 > Display::WIDTH)
+    if (y >= Display::HEIGHT || x >= Display::WIDTH)
         throw LogicError(instr, "Program tries to draw out of bounds");
     std::vector<uint8_t> sprite(arg);
     for (int i = 0; i < arg; i++) {
