@@ -16,13 +16,14 @@ void UserInterface::show() {
     int window_width, window_height;
     glfwGetWindowSize(window, &window_width, &window_height);
     float unit_w = window_width / 32.0f;
-    float unit_h = window_height / 20.0f;
+    float unit_h = window_height / 22.0f;
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
     ImVec2 item_spacing = ImGui::GetStyle().ItemSpacing;
+    ImVec2 window_padding = ImGui::GetStyle().WindowPadding;
     ImGui::SetNextWindowSize(ImVec2(window_width, window_height));
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration;
@@ -35,13 +36,15 @@ void UserInterface::show() {
     disassembly_window.show(unit_w * 6, unit_h * 10);
     ImGui::SameLine();
     chip_state_window.show(0, unit_h * 10);
+    ImGui::BeginChild("2nd line", ImVec2(unit_w * 32, unit_h * 10));
     ImGui::BeginChild("Input", ImVec2(unit_w * 8, 0), false, ImGuiWindowFlags_NoScrollbar);
     controls_window.show(unit_w * 8, unit_h * 2);
     keyboard_window.show(unit_w * 8, 0);
     ImGui::EndChild();
     ImGui::SameLine();
     messaging_window.show(0, 0);
-
+    ImGui::EndChild();
+    file_window.show(unit_w * 32, unit_h * 2 - item_spacing.y * 4);
     ImGui::End();
     ImGui::Render();
     glClearColor(0, 0, 0, 1);

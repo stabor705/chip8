@@ -7,6 +7,7 @@
 #include "ui/controlswindow.h"
 #include "ui/messagingwindow.h"
 #include "ui/keyboardwindow.h"
+#include "ui/filewindow.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -51,6 +52,9 @@ public:
     bool should_step() const { return controls_window.is_halted() && controls_window.should_step(); }
     int get_key_pressed() const { return keyboard_window.get_key(); }
     bool should_reset_chip() { return controls_window.should_reset(); }
+    bool file_should_be_loaded() { return file_window.new_file(); }
+    fs::path get_file_to_load() const { return file_window.get_path(); }
+    void set_file_loaded(const fs::path &filepath) { file_window.update(filepath); }
 
 
     ~UserInterface();
@@ -72,6 +76,7 @@ private:
     ControlsWindow controls_window;
     MessagingWindow messaging_window;
     KeyboardWindow keyboard_window;
+    FileWindow file_window;
 
     GLFWwindow *window;
     int key_pressed {};

@@ -1,13 +1,8 @@
 #include "emulation.h"
 
 #include <thread>
-
-//const std::unordered_map<int, uint8_t> Emulation::key_bindings= {
-//    { 49, 0 }, { 50, 1 }, { 51, 2 }, { 52, 3 },
-//    { 81, 4 }, { 87, 5 }, { 69, 6 }, { 82, 7 },
-//    { 65, 8 }, { 83, 9 }, { 68, 10 }, { 70, 11 },
-//    { 90, 12 }, { 88, 13 }, { 67, 14 }, { 86, 15 }
-//};
+#include <fstream>
+#include <sstream>
 
 void Emulation::run() {
     while (!ui.user_quit()) {
@@ -18,6 +13,8 @@ void Emulation::run() {
         ui.show();
         ui.process_input();
         handle_key(ui.get_key_pressed());
+        if (ui.file_should_be_loaded())
+            load_program(ui.get_file_to_load());
 
         if (ui.should_reset_chip())
             chip.reset();
@@ -38,15 +35,21 @@ void Emulation::run() {
     }
 }
 
-void Emulation::load_program(std::istream &is) {
+void Emulation::load_program(fs::path filepath) {
     std::vector<uint8_t> program;
-    while (!is.eof()) {
+    std::ifstream file(filepath);
+    while (!file.eof()) {
         uint8_t byte;
-        is.read(reinterpret_cast<char*>(&byte), 1);
+        file.read(reinterpret_cast<char*>(&byte), 1);
         program.push_back(byte);
     }
+    chip.reset();
     chip.load_program(program);
     ui.run_disassembler(program);
+    ui.set_file_loaded(filepath);
+    std::stringstream ss;
+    ss << "Successfully loaded file " << filepath;
+    ui.add_message(ss.str());
 }
 
 void Emulation::handle_key(int key) {

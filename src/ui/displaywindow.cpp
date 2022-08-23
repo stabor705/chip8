@@ -14,7 +14,7 @@ void DisplayWindow::show(float width, float height) {
     glGenerateMipmap(GL_TEXTURE_2D);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::BeginChild("Display", ImVec2(width, height), true);
-    ImGui::Image((void*)texture, ImVec2(width, height));
+    ImGui::Image((void*)(intptr_t)texture, ImVec2(width, height));
     ImGui::EndChild();
     ImGui::PopStyleVar();
 }

@@ -3,17 +3,20 @@
 UndefinedInstruction::UndefinedInstruction(uint16_t instr) {
     std::stringstream ss;
     ss << "Encountered undefined instruction " << std::hex << (int)instr << '.';
+    msg = ss.str();
 }
 
 LogicError::LogicError(uint16_t instr, const char *explanation) {
     std::stringstream ss;
     ss << "Instruction " << std::hex << int(instr) << " contains logical error: "
        << explanation;
+    msg = ss.str();
 }
 
 ProgramSizeError::ProgramSizeError(size_t size) {
-    std::stringstream ss(msg);
+    std::stringstream ss;
     ss << "Program of size " << size << " bytes is too large";
+    msg = ss.str();
 }
 
 constexpr std::array<Chip8::instr_impl, 16> Chip8::impls;
