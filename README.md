@@ -2,7 +2,8 @@
 CHIP-8 emulator written in C++.
 
 ## Demo
-TODO:
+![demo screenshot](demo.png)
+*Note: there are ui issues visible in this screenshot that I've been procrastinating on fixing*
 
 ## Features
 - Renders CHIP-8 games using OpenGL.
