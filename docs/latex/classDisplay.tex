@@ -1,0 +1,84 @@
+\hypertarget{classDisplay}{}\doxysection{Display Class Reference}
+\label{classDisplay}\index{Display@{Display}}
+
+
+chip8 display interface  
+
+
+
+
+{\ttfamily \#include $<$display.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classDisplay_afd468a7e5b7ed60a0d6e32119846f088}\label{classDisplay_afd468a7e5b7ed60a0d6e32119846f088}} 
+typedef std\+::array$<$ std\+::array$<$ bool, WIDTH $>$, HEIGHT $>$ {\bfseries Pixels}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classDisplay_a45d9c51582edd32c89a7e026191eddd5}{draw\+\_\+sprite}} (uint8\+\_\+t x, uint8\+\_\+t y, const std\+::vector$<$ uint8\+\_\+t $>$ \&sprite)
+\begin{DoxyCompactList}\small\item\em Draw sprite at given position in a manner that conforms to how real chip8 works. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classDisplay_ace23880da99e4770abd236c9cf497388}\label{classDisplay_ace23880da99e4770abd236c9cf497388}} 
+const Pixels \& {\bfseries get\+\_\+pixels} () const
+\item 
+\mbox{\Hypertarget{classDisplay_a14242933dd00fc1d50f9ae70d5121d14}\label{classDisplay_a14242933dd00fc1d50f9ae70d5121d14}} 
+void {\bfseries clear} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classDisplay_ad820dfaa80173b038d23db97f5fcfb4b}\label{classDisplay_ad820dfaa80173b038d23db97f5fcfb4b}} 
+static constexpr uint8\+\_\+t {\bfseries WIDTH} = 64
+\item 
+\mbox{\Hypertarget{classDisplay_a7935596608f8748d95b2d71e76d0efcd}\label{classDisplay_a7935596608f8748d95b2d71e76d0efcd}} 
+static constexpr uint8\+\_\+t {\bfseries HEIGHT} = 32
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+chip8 display interface 
+
+In chip8 architecture, display is a 64x32 matrix, with each pixel representing one of 2 color values, that is to say, it is a matrix of 1s and 0s. This class stores these binary values as a 2D array of booleans. Additionaly, its interface does not work by drawing in pixel-\/by-\/pixel manner. Instead, the user is provided with method for properly drawing whole sprite at once -\/ \mbox{\hyperlink{classDisplay_a45d9c51582edd32c89a7e026191eddd5}{Display\+::draw\+\_\+sprite}}.
+
+By default, all pixels are set to 0. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDisplay_a45d9c51582edd32c89a7e026191eddd5}\label{classDisplay_a45d9c51582edd32c89a7e026191eddd5}} 
+\index{Display@{Display}!draw\_sprite@{draw\_sprite}}
+\index{draw\_sprite@{draw\_sprite}!Display@{Display}}
+\doxysubsubsection{\texorpdfstring{draw\_sprite()}{draw\_sprite()}}
+{\footnotesize\ttfamily bool Display\+::draw\+\_\+sprite (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{x,  }\item[{uint8\+\_\+t}]{y,  }\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{sprite }\end{DoxyParamCaption})}
+
+
+
+Draw sprite at given position in a manner that conforms to how real chip8 works. 
+
+Drawing in chip8 architecture is a little bit more involved than you would expect. Basically, the sprite, always 8 bits wide and with variable height, is drawn starting from (X, Y) point. However, there are a couple of peculiarities to keep in mind.
+
+
+\begin{DoxyEnumerate}
+\item If sprite is drawn on previously set pixel, the display has to signal, that collision has occured.
+\item Sprite is not really drawn by setting displays\textquotesingle{} pixels to corresponding values of sprites\textquotesingle{} pixels. Instead, display is XORed with sprite data.
+\item The value of X can\textquotesingle{}t be greater than 0x3F and value of Y can\textquotesingle{}t be grater than 0x\+F1.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & X coordinate, read from left to right \\
+\hline
+{\em y} & Y coordinate, read from top to bottom \\
+\hline
+{\em sprite} & 8xN sprite data given as a vector of bytes, each byte representing one row of 1s and 0s, read from top to bottom \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if sprite pixel collided with previously set pixel, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/chip8/display.\+h\item 
+src/chip8/display.\+cpp\end{DoxyCompactItemize}

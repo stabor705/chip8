@@ -1,0 +1,141 @@
+\hypertarget{classChip8}{}\doxysection{Chip8 Class Reference}
+\label{classChip8}\index{Chip8@{Chip8}}
+
+
+A chip8 emulator.  
+
+
+
+
+{\ttfamily \#include $<$chip8.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classChip8_a8a1db457edbf76fd46f58fe3a3ef4ff6}{load\+\_\+program}} (const Program \&program)
+\begin{DoxyCompactList}\small\item\em Load a program into chips\textquotesingle{} memory. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classChip8_a63b03eebcb8d025c809b8c0f2961a4bb}\label{classChip8_a63b03eebcb8d025c809b8c0f2961a4bb}} 
+void \mbox{\hyperlink{classChip8_a63b03eebcb8d025c809b8c0f2961a4bb}{run\+\_\+instr}} (const uint16\+\_\+t instr)
+\begin{DoxyCompactList}\small\item\em Run 2 byte chip8 instruction. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classChip8_a306fd898662ad76037e754ba96548371}{run\+\_\+program\+\_\+instr}} ()
+\begin{DoxyCompactList}\small\item\em Run instruction currently stored in memory and pointed to by program counter. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classChip8_af74e40e761671dfeffb5348e04023219}{press\+\_\+key}} (uint8\+\_\+t key)
+\begin{DoxyCompactList}\small\item\em Emulate pressing key on chip8 console. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classChip8_a71c73499e4b88571afec077cec7287db}\label{classChip8_a71c73499e4b88571afec077cec7287db}} 
+void {\bfseries release\+\_\+key} ()
+\item 
+void \mbox{\hyperlink{classChip8_ad60601f415aca59704bf9cb6d8ec3bb4}{reset}} ()
+\begin{DoxyCompactList}\small\item\em Reset emulation. \end{DoxyCompactList}\item 
+const Display\+::\+Pixels \& \mbox{\hyperlink{classChip8_ac993673e3cd1f01bafcc355676c29026}{get\+\_\+screen}} () const
+\begin{DoxyCompactList}\small\item\em Get 64x32 binary display produced by \mbox{\hyperlink{classChip8}{Chip8}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classChip8_a0e605c4de1514e0d52de40835e4c6707}\label{classChip8_a0e605c4de1514e0d52de40835e4c6707}} 
+uint16\+\_\+t {\bfseries get\+\_\+vi} () const
+\item 
+\mbox{\Hypertarget{classChip8_a5789ba1b2eb6e5bc39777053b15ec0ee}\label{classChip8_a5789ba1b2eb6e5bc39777053b15ec0ee}} 
+uint8\+\_\+t {\bfseries get\+\_\+v} (uint16\+\_\+t idx) const
+\item 
+\mbox{\Hypertarget{classChip8_a23f4e336208fc1fc30e06670f577ad94}\label{classChip8_a23f4e336208fc1fc30e06670f577ad94}} 
+uint16\+\_\+t {\bfseries get\+\_\+pc} () const
+\item 
+\mbox{\Hypertarget{classChip8_a8cc9d42cf67de264ad0de9b554fa2b83}\label{classChip8_a8cc9d42cf67de264ad0de9b554fa2b83}} 
+void {\bfseries set\+\_\+vi} (uint16\+\_\+t idx, uint8\+\_\+t value)
+\item 
+\mbox{\Hypertarget{classChip8_af1b366ffb21b1f2869f77dc6761e8fae}\label{classChip8_af1b366ffb21b1f2869f77dc6761e8fae}} 
+uint8\+\_\+t {\bfseries get\+\_\+vf} () const
+\item 
+\mbox{\Hypertarget{classChip8_af33503824c0161d5276088aa2673ca55}\label{classChip8_af33503824c0161d5276088aa2673ca55}} 
+const Memory \& {\bfseries get\+\_\+mem} () const
+\item 
+\mbox{\Hypertarget{classChip8_a53abfd44782c4b441bdee093bdddd756}\label{classChip8_a53abfd44782c4b441bdee093bdddd756}} 
+uint8\+\_\+t {\bfseries get\+\_\+pressed\+\_\+key} () const
+\item 
+\mbox{\Hypertarget{classChip8_a57ba3a96ba3f1205ab0e9413a308f461}\label{classChip8_a57ba3a96ba3f1205ab0e9413a308f461}} 
+bool {\bfseries display\+\_\+changed} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A chip8 emulator. 
+
+It stores emulation state and provides an interface for running 2 byte chip8 instructions. You can either run a chip8 program with it by calling \mbox{\hyperlink{classChip8_a8a1db457edbf76fd46f58fe3a3ef4ff6}{Chip8\+::load\+\_\+program}} and then repeatedly calling \mbox{\hyperlink{classChip8_a306fd898662ad76037e754ba96548371}{Chip8\+::run\+\_\+program\+\_\+instr}}, or run single instructions using \mbox{\hyperlink{classChip8_a63b03eebcb8d025c809b8c0f2961a4bb}{Chip8\+::run\+\_\+instr}}.
+
+While running the program, you can emulate pressing key on real console by calling \mbox{\hyperlink{classChip8_af74e40e761671dfeffb5348e04023219}{Chip8\+::press\+\_\+key}} (there are 16 keys, each of them corresponding to 4 bit number from 0x0 to 0xf) and then \char`\"{}see\char`\"{} produced graphics with \mbox{\hyperlink{classChip8_ac993673e3cd1f01bafcc355676c29026}{Chip8\+::get\+\_\+screen}}, which returns current pixel array, a 2D array of booleans.
+
+Note that there are no public, helpful in unit tests, functions mapping some expected functionality to 2 byte instruction (jump(addr) for instance). You have to create the instruction code yourself and then call \mbox{\hyperlink{classChip8_a63b03eebcb8d025c809b8c0f2961a4bb}{Chip8\+::run\+\_\+instr}}. This is intentional, as it greatly simplifies instruction parsing logic, which is just a mapping between first byte of instruction and some private callback (using std\+::array) without really causing much trouble. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classChip8_ac993673e3cd1f01bafcc355676c29026}\label{classChip8_ac993673e3cd1f01bafcc355676c29026}} 
+\index{Chip8@{Chip8}!get\_screen@{get\_screen}}
+\index{get\_screen@{get\_screen}!Chip8@{Chip8}}
+\doxysubsubsection{\texorpdfstring{get\_screen()}{get\_screen()}}
+{\footnotesize\ttfamily const Display\+::\+Pixels\& Chip8\+::get\+\_\+screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get 64x32 binary display produced by \mbox{\hyperlink{classChip8}{Chip8}}. 
+
+\begin{DoxyReturn}{Returns}
+A 64x32 array of booleans, each element representing one pixel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classChip8_a8a1db457edbf76fd46f58fe3a3ef4ff6}\label{classChip8_a8a1db457edbf76fd46f58fe3a3ef4ff6}} 
+\index{Chip8@{Chip8}!load\_program@{load\_program}}
+\index{load\_program@{load\_program}!Chip8@{Chip8}}
+\doxysubsubsection{\texorpdfstring{load\_program()}{load\_program()}}
+{\footnotesize\ttfamily void Chip8\+::load\+\_\+program (\begin{DoxyParamCaption}\item[{const Program \&}]{program }\end{DoxyParamCaption})}
+
+
+
+Load a program into chips\textquotesingle{} memory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em program} & A byte vector storing raw instructions in big-\/endian order. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classChip8_af74e40e761671dfeffb5348e04023219}\label{classChip8_af74e40e761671dfeffb5348e04023219}} 
+\index{Chip8@{Chip8}!press\_key@{press\_key}}
+\index{press\_key@{press\_key}!Chip8@{Chip8}}
+\doxysubsubsection{\texorpdfstring{press\_key()}{press\_key()}}
+{\footnotesize\ttfamily void Chip8\+::press\+\_\+key (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{key }\end{DoxyParamCaption})}
+
+
+
+Emulate pressing key on chip8 console. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key} & A integer in \mbox{[}0x0; 0xf\mbox{]} representing console key. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+From this point on, chip will behave as if the key was pressed all the time. You have to call Chip8\+::release\+\_\+key in order to release it each time you call \mbox{\hyperlink{classChip8_af74e40e761671dfeffb5348e04023219}{Chip8\+::press\+\_\+key}}. 
+\end{DoxyNote}
+\mbox{\Hypertarget{classChip8_ad60601f415aca59704bf9cb6d8ec3bb4}\label{classChip8_ad60601f415aca59704bf9cb6d8ec3bb4}} 
+\index{Chip8@{Chip8}!reset@{reset}}
+\index{reset@{reset}!Chip8@{Chip8}}
+\doxysubsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily void Chip8\+::reset (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Reset emulation. 
+
+This method cleans whole memory (program included), registers, call stack and other state variables. After that, \mbox{\hyperlink{classChip8}{Chip8}} can be used as if it was just instantiated. \mbox{\Hypertarget{classChip8_a306fd898662ad76037e754ba96548371}\label{classChip8_a306fd898662ad76037e754ba96548371}} 
+\index{Chip8@{Chip8}!run\_program\_instr@{run\_program\_instr}}
+\index{run\_program\_instr@{run\_program\_instr}!Chip8@{Chip8}}
+\doxysubsubsection{\texorpdfstring{run\_program\_instr()}{run\_program\_instr()}}
+{\footnotesize\ttfamily bool Chip8\+::run\+\_\+program\+\_\+instr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Run instruction currently stored in memory and pointed to by program counter. 
+
+\begin{DoxyReturn}{Returns}
+true on success, false if program counter ran past program memory space and no instruction could be executed. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/chip8/chip8.\+h\item 
+src/chip8/chip8.\+cpp\end{DoxyCompactItemize}
