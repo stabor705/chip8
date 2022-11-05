@@ -1,5 +1,5 @@
-# CHIP-8
-CHIP-8 emulator written in C++.
+# chip8
+A chip8 gaming architecture emulator written in C++.
 
 ## Demo
 ![demo screenshot](demo.png)

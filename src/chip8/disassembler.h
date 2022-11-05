@@ -6,8 +6,23 @@
 #include <array>
 #include <unordered_map>
 
+/**
+ * @brief A disassembler turning 2 bytes chip8 instructions into human readable strings.
+ *
+ * This class stores all functionality required to turn a 2 byte chip8 instruction
+ * into human readable string. It has only one public method - Disassembler::disassemble -
+ * which returns disassembly of provided instruction.
+ *
+ * The returned strings conform to
+ * [Cowgod's Chip-8 Technical Reference v1.0](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
+ */
 class Disassembler {
 public:
+    /**
+     * @brief Disassemble chip8 instruction
+     * @param instr A 2 byte chip8 instruction.
+     * @return A human readable string representing given instruction.
+     */
     std::string disassemble(uint16_t instr);
 private:
     static std::string addr_instr(const char* name, uint16_t instr);

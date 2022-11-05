@@ -8,3 +8,6 @@
 	path = extern/ImGuiFileDialog
 	url = https://github.com/aiekick/ImGuiFileDialog
 	branch = Lib_Only
+[submodule "extern/doxygen-awesome-css.git"]
+	path = extern/doxygen-awesome-css.git
+	url = https://github.com/jothepro/doxygen-awesome-css.git

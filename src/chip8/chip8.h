@@ -43,16 +43,73 @@ private:
 using Program = std::vector<uint8_t>;
 using Memory = std::array<uint8_t, 0xFFF>;
 
+/**
+ * @brief A chip8 emulator.
+ *
+ * It stores emulation state and provides an interface for running 2 byte chip8
+ * instructions.
+ * You can either run a chip8 program with it by calling Chip8::load_program
+ * and then repeatedly calling Chip8::run_program_instr, or run single instructions
+ * using Chip8::run_instr.
+ *
+ * While running the program, you can emulate pressing key on real console by
+ * calling Chip8::press_key (there are 16 keys, each of them corresponding to 4 bit number
+ * from 0x0 to 0xf) and then "see" produced graphics with Chip8::get_screen, which returns
+ * current pixel array, a 2D array of booleans.
+ *
+ * Note that there are no public, helpful in unit tests, functions mapping
+ * some expected functionality to 2 byte instruction (jump(addr) for instance).
+ * You have to create the instruction code yourself and then call Chip8::run_instr.
+ * This is intentional, as it greatly simplifies instruction parsing logic, which is
+ * just a mapping between first byte of instruction and some private callback
+ * (using std::array) without really causing much trouble.
+ */
 class Chip8 {
 public:
     Chip8();
+    /**
+     * @brief Load a program into chips' memory.
+     * @param program A byte vector storing raw instructions in big-endian order.
+     */
     void load_program(const Program &program);
 
+    /**
+     * @brief Run 2 byte chip8 instruction.
+     */
     void run_instr(const uint16_t instr);
+
+    /**
+     * @brief Run instruction currently stored in memory and pointed to by program
+     * counter.
+     * @return true on success, false if program counter ran past program memory space
+     * and no instruction could be executed.
+     */
     bool run_program_instr();
+
+    /**
+     * @brief Emulate pressing key on chip8 console.
+     * @param key A integer in [0x0; 0xf] representing console key.
+     * @note From this point on, chip will behave as if the key was pressed all the time.
+     * You have to call Chip8::release_key in order to release it each time you call
+     * Chip8::press_key.
+     */
     void press_key(uint8_t key);
     void release_key() { key_pressed = false; }
+
+    /**
+     * @brief Reset emulation.
+     *
+     * This method cleans whole memory (program included), registers,
+     * call stack and other state variables. After that, Chip8 can be used as if it
+     * was just instantiated.
+     */
     void reset();
+
+    /**
+     * @brief Get 64x32 binary display produced by Chip8.
+     * @return A 64x32 array of booleans, each element representing one pixel.
+     */
+    const Display::Pixels& get_screen() const { return display.get_pixels(); }
 
     uint16_t get_vi() const { return vi; }
     uint8_t get_v(uint16_t idx) const { return v[idx]; }
@@ -60,7 +117,6 @@ public:
     void set_vi(uint16_t  idx, uint8_t value) { v[idx] = value; }
     uint8_t get_vf() const { return v[0xF]; }
     const Memory& get_mem() const { return memory; }
-    const Display::Pixels& get_screen() const { return display.get_pixels(); }
     uint8_t get_pressed_key() const { return (key_pressed) ? key : 0; }
     bool display_changed();
 private:
