@@ -39,3 +39,7 @@ cd build
 cmake ..
 cmake --build .
 ```
+
+## Docs
+You can browse Doxygen generated documentation on
+[projects' website](https://stabor705.github.io/chip8)
