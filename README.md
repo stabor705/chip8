@@ -40,6 +40,11 @@ cmake ..
 cmake --build .
 ```
 
+4. Run ch8 rom using command-line argument
+```
+./chip8 game.ch8
+```
+
 ## Docs
 You can browse Doxygen generated documentation on
 [projects' website](https://stabor705.github.io/chip8).
